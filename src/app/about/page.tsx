@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 const stats = [
-  { n: "2026", l: "Founded in Chitral" },,
+  { n: "2026", l: "Founded in Chitral" },
   { n: "0.8s", l: "Median generation time" },
   { n: "40+", l: "Base models in library" },
   { n: "10x", l: "Cheaper than studio shoots" },
