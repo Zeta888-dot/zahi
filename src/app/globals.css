@@ -1,26 +1,52 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-ink-black: #020108;
+  --color-charcoal: #333333;
+  --color-steel: #5d5c61;
+  --color-pewter: #818084;
+  --color-ash: #d7d7d6;
+  --color-canvas-white: #ffffff;
+  --color-paper: #f7f7f7;
+  --color-ember-orange: #fd7b03;
+  --font-display: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-coal: #141413;
+  --color-coal-light: #232322;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.dark body {
+  background: var(--color-coal);
+  color: var(--color-canvas-white);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-paper);
+  color: var(--color-ink-black);
+}
+@keyframes menu-in {
+  from { opacity: 0; transform: translateY(-12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes line-up {
+  from { transform: translateY(110%); }
+  to { transform: translateY(0); }
+}
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes wipe {
+  from { clip-path: inset(0 0 0 62%); }
+  to { clip-path: inset(0 0 0 30%); }
+}
+@keyframes wipe-line {
+  from { left: 62%; }
+  to { left: 30%; }
+}
+html {
+  scroll-behavior: smooth;
 }
