@@ -15,8 +15,8 @@ export default async function Image() {
           flexDirection: "column",
           justifyContent: "space-between",
           padding: 64,
-          background: "#f4f2ee",
-          color: "#101010",
+          background: "#050505",
+          color: "#f5f5f2",
         }}
       >
         <div
@@ -27,12 +27,15 @@ export default async function Image() {
             fontSize: 26,
           }}
         >
-          <div>
-            zahi<span style={{ color: "#ff5c1f" }}>.</span>
+          <div style={{ display: "flex" }}>
+            <span>
+              zahi<span style={{ color: "#ff6900" }}>.</span>
+            </span>
           </div>
 
           <div
             style={{
+              display: "flex",
               fontSize: 16,
               color: "#77736e",
               letterSpacing: "0.12em",
@@ -43,22 +46,28 @@ export default async function Image() {
           </div>
         </div>
 
-        <div>
+        <div style={{ display: "flex", flexDirection: "column" }}>
           <div
             style={{
+              display: "flex",
+              flexDirection: "column",
               fontSize: 82,
               lineHeight: 0.94,
               letterSpacing: "-0.055em",
               maxWidth: 1000,
             }}
           >
-            Your store,
-            <br />
-            instantly try-on.
+            <span>
+              Your store,
+            </span>
+            <span>
+              instantly try-on.
+            </span>
           </div>
 
           <div
             style={{
+              display: "flex",
               marginTop: 28,
               fontSize: 24,
               color: "#77736e",
