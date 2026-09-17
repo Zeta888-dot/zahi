@@ -3,35 +3,40 @@ import { Inter } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+});
 
 export const metadata: Metadata = {
-  title: "zahi — Virtual Try-On for eCommerce",
+  title: "zahi. | AI Virtual Try-On",
   description:
-    "AI virtual try-on for Pakistani and international eCommerce stores. Paste a product link, get photorealistic try-ons in under a second.",
+    "AI-powered virtual try-on for fashion commerce. Turn your product catalog into realistic try-on experiences.",
   openGraph: {
-    title: "zahi — Virtual Try-On for eCommerce",
+    title: "zahi. | AI Virtual Try-On",
     description:
-      "AI virtual try-on for Pakistani and international eCommerce stores.",
+      "AI-powered virtual try-on for fashion commerce.",
     url: "https://zahi.pk",
-    siteName: "zahi",
+    siteName: "zahi.",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "zahi — Virtual Try-On for eCommerce",
+    title: "zahi. | AI Virtual Try-On",
     description:
-      "AI virtual try-on for Pakistani and international eCommerce stores.",
+      "AI-powered virtual try-on for fashion commerce.",
   },
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.variable} font-display antialiased dark:bg-coal dark:text-canvas-white`}
+        className={`${inter.variable} bg-[#050505] text-[#f5f5f2] antialiased`}
       >
         <Navbar />
         {children}

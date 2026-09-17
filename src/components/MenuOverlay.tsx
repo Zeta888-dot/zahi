@@ -63,7 +63,7 @@ export default function MenuOverlay({
 
       {/* MENU CARD */}
       <div
-        className={`absolute left-1/2 top-[14px] flex h-[calc(100dvh-28px)] w-[calc(100%-58px)] max-w-[320px] -translate-x-1/2 flex-col overflow-hidden rounded-[27px] shadow-[0_24px_70px_rgba(0,0,0,0.14)] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:top-[16px] sm:h-[592px] sm:w-[274px] ${
+        className={`absolute left-1/2 top-[14px] flex h-[calc(100dvh-28px)] w-[calc(100%-58px)] max-w-[320px] -translate-x-1/2 flex-col overflow-hidden rounded-[27px] shadow-[0_24px_70px_rgba(0,0,0,0.14)] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:top-[16px] sm:h-[520px] sm:w-[274px] ${
           dark
             ? "bg-[#292929] text-white"
             : "bg-[#F1F0EC] text-[#111111]"
@@ -73,7 +73,7 @@ export default function MenuOverlay({
             : "-translate-y-5 scale-[0.97]"
         }`}
       >
-        {/* 
+        {/*
           Empty top area intentionally left underneath
           the centered navbar pill.
         */}
