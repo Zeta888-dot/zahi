@@ -1,115 +1,108 @@
-import Link from "next/link";
+"use client";
 
-function ArrowIcon() {
-  return (
-    <svg
-      viewBox="0 0 20 20"
-      fill="none"
-      className="h-4 w-4"
-      aria-hidden="true"
-    >
-      <path
-        d="M4 10h11M10.5 5.5 15 10l-4.5 4.5"
-        stroke="currentColor"
-        strokeWidth="1.4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
+import { useState } from "react";
 
-function CornerMark({
-  position,
-}: {
-  position: "top-left" | "top-right" | "bottom-left" | "bottom-right";
-}) {
-  const positionClass = {
-    "top-left": "left-5 top-5 border-l border-t",
-    "top-right": "right-5 top-5 border-r border-t",
-    "bottom-left": "bottom-5 left-5 border-b border-l",
-    "bottom-right": "bottom-5 right-5 border-b border-r",
-  }[position];
-
-  return (
-    <span
-      className={`absolute h-5 w-5 border-white/[0.13] ${positionClass}`}
-      aria-hidden="true"
-    />
-  );
-}
+const MONO = '"JetBrains Mono", monospace';
 
 export default function StartSection() {
+  const [email, setEmail] = useState("");
+  const [sent, setSent] = useState(false);
+
   return (
-    <section id="start" className="zahi-section">
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_100%,rgba(255,105,0,0.1),transparent_48%)]" />
+    <section className="relative overflow-hidden" id="start" style={{ background: "#0B1216" }}>
+      {/* glow */}
+      <div
+        className="pointer-events-none absolute top-1/2 left-1/2 h-[500px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full"
+        style={{
+          background: "radial-gradient(circle, rgba(40,118,157,0.28), transparent 65%)",
+          filter: "blur(60px)",
+        }}
+      />
 
-        <div className="zahi-container relative py-[150px] sm:py-[190px]">
-          <div className="relative mx-auto max-w-[1050px] overflow-hidden border border-white/[0.08] bg-[#090909] px-6 py-20 text-center sm:px-12 sm:py-28 lg:px-20">
-            <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:48px_48px] opacity-30" />
+      <div className="zahi-content relative" style={{ paddingBlock: 120 }}>
+        <div className="mx-auto max-w-[680px] text-center">
+          <p style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.18em", color: "#6FB6DD" }}>
+            EARLY ACCESS
+          </p>
 
-            <div className="zahi-glow left-1/2 top-1/2 h-[420px] w-[420px] -translate-x-1/2 -translate-y-1/2 opacity-35" />
+          <h2
+            className="mt-6"
+            style={{
+              fontSize: "clamp(40px, 7vw, 80px)",
+              fontWeight: 500,
+              letterSpacing: "-0.05em",
+              lineHeight: 0.95,
+              color: "#EAF4F9",
+            }}
+          >
+            Your first try-on
+            <br />
+            <span style={{ color: "#6FB6DD" }}>in 30 seconds.</span>
+          </h2>
 
-            <CornerMark position="top-left" />
-            <CornerMark position="top-right" />
-            <CornerMark position="bottom-left" />
-            <CornerMark position="bottom-right" />
+          <p style={{ fontSize: 15, lineHeight: 1.7, color: "#9BAAB1", marginTop: 20 }}>
+            Join the waitlist. We onboard a small batch of stores every
+            week and reply with a personal invite and a live demo.
+          </p>
 
-            <div className="relative z-10">
-              <div className="zahi-label">
-                Start building
-              </div>
-
-              <h2 className="mx-auto mt-8 max-w-[850px] text-[48px] font-medium leading-[0.9] tracking-[-0.06em] sm:text-[72px] lg:text-[94px]">
-                Make every
-                <br />
-                product
-                <br />
-                <span className="zahi-orange">try-on ready.</span>
-              </h2>
-
-              <p className="mx-auto mt-8 max-w-[510px] text-[13px] leading-[1.75] text-white/35 sm:text-[14px]">
-                Bring AI virtual try-on to your storefront, product, or
-                commerce workflow. Start with the experience you need and
-                scale from there.
+          {/* Form */}
+          {sent ? (
+            <div
+              className="mx-auto mt-10 max-w-[460px] rounded-[18px] p-6"
+              style={{ border: "1px solid rgba(111,182,221,0.25)", background: "rgba(17,29,36,0.6)" }}
+            >
+              <p style={{ fontFamily: MONO, fontSize: 10, color: "#6FB6DD" }}>
+                ✓ REQUEST RECEIVED
               </p>
-
-              <div className="mt-9 flex flex-wrap justify-center gap-3">
-                <Link href="#widget" className="zahi-button-primary">
-                  Try the experience
-                  <ArrowIcon />
-                </Link>
-
-                <Link href="#api" className="zahi-button-secondary">
-                  Build with API
-                  <ArrowIcon />
-                </Link>
-              </div>
-
-              <div className="mx-auto mt-12 flex max-w-[460px] items-center justify-center gap-4">
-                <span className="h-px flex-1 bg-white/[0.07]" />
-
-                <span className="text-[7px] uppercase tracking-[0.14em] text-white/15">
-                  Commerce / AI / Try-on
-                </span>
-
-                <span className="h-px flex-1 bg-white/[0.07]" />
-              </div>
+              <p className="mt-3" style={{ fontSize: 13, color: "#EAF4F9", lineHeight: 1.6 }}>
+                Thanks — we'll reach out within one business day with an
+                invite and a live demo.
+              </p>
             </div>
-          </div>
+          ) : (
+            <form
+              className="mx-auto mt-10 flex w-full max-w-[460px] gap-2"
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (!email) return;
+                setSent(true);
+              }}
+            >
+              <input
+                required
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@yourstore.com"
+                className="flex-1 rounded-full border px-5"
+                style={{
+                  padding: "14px 18px",
+                  fontSize: 12,
+                  border: "1px solid rgba(255,255,255,0.12)",
+                  background: "rgba(17,29,36,0.6)",
+                  color: "#EAF4F9",
+                  outline: "none",
+                }}
+              />
+              <button
+                type="submit"
+                className="shrink-0 rounded-full px-6"
+                style={{
+                  padding: "14px 22px",
+                  fontSize: 11,
+                  fontWeight: 600,
+                  background: "#6FB6DD",
+                  color: "#0B1216",
+                }}
+              >
+                Join waitlist
+              </button>
+            </form>
+          )}
 
-          <div className="mx-auto mt-8 flex max-w-[1050px] flex-col justify-between gap-4 border-t border-white/[0.07] pt-5 sm:flex-row sm:items-center">
-            <span className="text-[8px] uppercase tracking-[0.12em] text-white/15">
-              Zahi virtual try-on
-            </span>
-
-            <div className="flex items-center gap-5 text-[8px] uppercase tracking-[0.1em] text-white/20">
-              <span>Storefront</span>
-              <span>API</span>
-              <span>FASHN AI</span>
-            </div>
-          </div>
+          <p className="mt-6" style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.1em", color: "#52707E" }}>
+            200+ STORES ON WAITLIST · NO SPAM, EVER
+          </p>
         </div>
       </div>
     </section>

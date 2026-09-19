@@ -1,205 +1,225 @@
-import Link from "next/link";
+"use client";
 
-type Plan = {
-  name: string;
-  description: string;
-  price: string;
-  suffix: string;
-  featured?: boolean;
-  features: string[];
-};
+import { useState } from "react";
 
-const plans: Plan[] = [
+const MONO = '"JetBrains Mono", monospace';
+
+const tiers = [
   {
-    name: "Starter",
-    description: "For teams exploring AI virtual try-on.",
-    price: "$0",
-    suffix: "to start",
+    name: "Flex",
+    base: 0,
+    rate: "$0.18 / gen",
+    included: "no base fee",
+    tagline: "Pure pay-as-you-go",
     features: [
-      "Try-on generations",
-      "Basic image workflow",
-      "API access",
-      "Developer sandbox",
+      "$0.18 per generation",
+      "All 40+ base models",
+      "Widget, plugins & API",
+      "Watermark-free exports",
+      "Email support",
     ],
+    featured: false,
+    cta: "Start generating",
   },
   {
-    name: "Growth",
-    description: "For stores adding try-on to their customer journey.",
-    price: "Custom",
-    suffix: "usage based",
-    featured: true,
+    name: "Studio",
+    base: 49,
+    rate: "$0.10 / gen",
+    included: "600 gens included",
+    tagline: "For growing stores",
     features: [
-      "Higher generation volume",
-      "Store integrations",
-      "Production API access",
-      "Priority processing",
+      "$0.10 per generation after",
+      "Everything in Flex",
+      "Custom brand presets",
+      "Priority generation queue",
+      "Email + chat support",
     ],
+    featured: true,
+    cta: "Choose Studio",
   },
   {
     name: "Scale",
-    description: "For larger commerce and platform workflows.",
-    price: "Custom",
-    suffix: "tailored",
+    base: 199,
+    rate: "$0.06 / gen",
+    included: "3,000 gens included",
+    tagline: "For catalogs & marketplaces",
     features: [
-      "High-volume generation",
-      "Custom integrations",
-      "Dedicated support",
-      "Enterprise workflows",
+      "$0.06 per generation after",
+      "Everything in Studio",
+      "Custom model training",
+      "Dedicated SLA, 99.9%",
+      "Priority support",
     ],
+    featured: false,
+    cta: "Choose Scale",
   },
 ];
 
-function ArrowIcon() {
-  return (
-    <svg
-      viewBox="0 0 20 20"
-      fill="none"
-      className="h-4 w-4"
-      aria-hidden="true"
-    >
-      <path
-        d="M4 10h11M10.5 5.5 15 10l-4.5 4.5"
-        stroke="currentColor"
-        strokeWidth="1.4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
+function bestPlan(n: number) {
+  const opts = [
+    { name: "Flex", c: n * 0.18 },
+    { name: "Studio", c: 49 + Math.max(0, n - 600) * 0.1 },
+    { name: "Scale", c: 199 + Math.max(0, n - 3000) * 0.06 },
+  ];
+  return opts.reduce((a, b) => (b.c < a.c ? b : a));
 }
 
-function CheckIcon() {
+function Check() {
   return (
-    <svg
-      viewBox="0 0 20 20"
-      fill="none"
-      className="h-3.5 w-3.5"
-      aria-hidden="true"
-    >
-      <path
-        d="m5 10 3 3 7-7"
-        stroke="currentColor"
-        strokeWidth="1.4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="mt-[3px] shrink-0">
+      <path d="M2 6.5 4.5 9 10 3" stroke="#28769D" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
 
 export default function PricingSection() {
+  const [images, setImages] = useState(1000);
+  const best = bestPlan(images);
+
   return (
-    <section id="pricing" className="zahi-section">
-      <div className="relative overflow-hidden">
-        <div className="zahi-glow left-[38%] top-[-220px] h-[500px] w-[500px] opacity-25" />
+    <section className="zahi-section" id="pricing">
+      <div className="zahi-content zahi-section-inner">
+        <div className="mx-auto max-w-[640px] text-center">
+          <p className="zahi-eyebrow" style={{ justifyContent: "center" }}>Pricing</p>
+          <h2 className="zahi-heading mt-6 text-[40px] lg:text-[56px]">
+            Pay for results,
+            <br />
+            <span className="zahi-blue">not seats.</span>
+          </h2>
+          <p className="zahi-body mt-6" style={{ fontSize: 15 }}>
+            No free tier, no contracts. Every generation is billed, and the
+            more you generate the less each one costs.
+          </p>
+        </div>
 
-        <div className="zahi-container zahi-section-inner relative">
-          <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
-            <div>
-              <div className="zahi-label">Pricing</div>
+        {/* Cards: narrow + tall */}
+        <div className="mx-auto mt-16 grid max-w-[960px] gap-5 md:grid-cols-3">
+          {tiers.map((p) => (
+            <div
+              key={p.name}
+              className="relative flex flex-col rounded-[22px] p-7 transition-all duration-300 hover:-translate-y-1.5"
+              style={
+                p.featured
+                  ? {
+                      background: "linear-gradient(180deg, #FFFFFF 0%, #EDF8FD 100%)",
+                      border: "1.5px solid #28769D",
+                      boxShadow: "0 25px 70px rgba(40,118,157,0.18)",
+                    }
+                  : {
+                      background: "#FFFFFF",
+                      border: "1px solid #E2EEF3",
+                      boxShadow: "0 10px 30px rgba(64,112,132,0.07)",
+                    }
+              }
+            >
+              {p.featured && (
+                <span
+                  className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full px-3 py-1"
+                  style={{ fontFamily: MONO, fontSize: 8, letterSpacing: "0.14em", background: "#28769D", color: "#fff" }}
+                >
+                  BEST VALUE
+                </span>
+              )}
 
-              <h2 className="mt-7 max-w-[700px] text-[43px] font-medium leading-[0.95] tracking-[-0.05em] sm:text-[60px]">
-                Start small.
-                <br />
-                <span className="zahi-orange">Scale with demand.</span>
-              </h2>
+              <p style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.16em", color: p.featured ? "#28769D" : "#9BAAB1" }}>
+                {p.name.toUpperCase()}
+              </p>
+              <p className="mt-2" style={{ fontSize: 12, color: "#718087" }}>
+                {p.tagline}
+              </p>
+
+              <div className="mt-6 flex items-baseline gap-2">
+                <span className="zahi-display" style={{ fontSize: 44, color: "#111315" }}>
+                  ${p.base}
+                </span>
+                <span style={{ fontSize: 10, color: "#9BAAB1" }}>/ month base</span>
+              </div>
+
+              <div className="mt-4 flex flex-col gap-2">
+                <span
+                  className="rounded-full px-3 py-1.5"
+                  style={{
+                    fontFamily: MONO,
+                    fontSize: 9,
+                    width: "fit-content",
+                    background: p.featured ? "rgba(40,118,157,0.1)" : "#F2F9FC",
+                    color: p.featured ? "#28769D" : "#46535A",
+                  }}
+                >
+                  {p.rate}
+                </span>
+                <span style={{ fontFamily: MONO, fontSize: 9, color: "#9BAAB1" }}>
+                  {p.included}
+                </span>
+              </div>
+
+              <div className="my-6 h-px w-full" style={{ background: "#E2EEF3" }} />
+
+              <div className="flex flex-col gap-3">
+                {p.features.map((f) => (
+                  <div key={f} className="flex items-start gap-3">
+                    <Check />
+                    <span style={{ fontSize: 12, lineHeight: 1.55, color: "#46535A" }}>{f}</span>
+                  </div>
+                ))}
+              </div>
+
+              <p className="mt-6" style={{ fontFamily: MONO, fontSize: 8, letterSpacing: "0.1em", color: "#B9C7CD" }}>
+                BILLED MONTHLY · CANCEL ANYTIME
+              </p>
+
+              <a
+                href="/#start"
+                className="mt-4 flex items-center justify-center rounded-full"
+                style={{
+                  padding: "13px 18px",
+                  fontSize: 11,
+                  fontWeight: 600,
+                  background: p.featured ? "#111315" : "#ffffff",
+                  color: p.featured ? "#ffffff" : "#111315",
+                  border: p.featured ? "1px solid #111315" : "1px solid #D5E6ED",
+                  transition: "all 200ms ease",
+                }}
+              >
+                {p.cta}
+              </a>
             </div>
+          ))}
+        </div>
 
-            <p className="max-w-[360px] text-[12px] leading-[1.7] text-white/30 lg:pb-1">
-              Choose the workflow that fits your stage. Production pricing can
-              scale with your generation volume and integration needs.
+        {/* Estimator */}
+        <div className="zahi-panel-raised mx-auto mt-12 max-w-[720px] p-8">
+          <div className="flex items-center justify-between">
+            <p style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.14em", color: "#718087" }}>
+              ESTIMATE YOUR MONTH
+            </p>
+            <p style={{ fontFamily: MONO, fontSize: 9, color: "#9BAAB1" }}>
+              {images.toLocaleString()} try-ons
             </p>
           </div>
 
-          <div className="mt-14 grid gap-3 lg:grid-cols-3">
-            {plans.map((plan) => (
-              <article
-                key={plan.name}
-                className={`relative overflow-hidden rounded-[24px] border p-7 ${
-                  plan.featured
-                    ? "border-[#ff6900]/35 bg-[#ff6900]/[0.045]"
-                    : "border-white/[0.08] bg-white/[0.018]"
-                }`}
-              >
-                {plan.featured && (
-                  <div className="absolute right-6 top-6 rounded-full border border-[#ff6900]/25 bg-[#ff6900]/[0.08] px-2.5 py-1 text-[7px] font-medium uppercase tracking-[0.1em] text-[#ff6900]">
-                    Production
-                  </div>
-                )}
+          <input
+            type="range"
+            min={50}
+            max={10000}
+            step={50}
+            value={images}
+            onChange={(e) => setImages(Number(e.target.value))}
+            className="mt-6 w-full"
+            style={{ accentColor: "#28769D" }}
+          />
 
-                <div className="min-h-[118px]">
-                  <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-white/35">
-                    {plan.name}
-                  </p>
-
-                  <p className="mt-4 max-w-[250px] text-[11px] leading-[1.6] text-white/25">
-                    {plan.description}
-                  </p>
-                </div>
-
-                <div className="border-t border-white/[0.08] pt-6">
-                  <div className="flex items-end gap-2">
-                    <span className="text-[34px] font-medium leading-none tracking-[-0.05em]">
-                      {plan.price}
-                    </span>
-
-                    <span className="pb-1 text-[8px] uppercase tracking-[0.1em] text-white/20">
-                      {plan.suffix}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="mt-7 space-y-3 border-t border-white/[0.08] pt-6">
-                  {plan.features.map((feature) => (
-                    <div
-                      key={feature}
-                      className="flex items-center gap-3 text-[10px] text-white/40"
-                    >
-                      <span
-                        className={
-                          plan.featured
-                            ? "text-[#ff6900]"
-                            : "text-white/25"
-                        }
-                      >
-                        <CheckIcon />
-                      </span>
-
-                      {feature}
-                    </div>
-                  ))}
-                </div>
-
-                <Link
-                  href="#start"
-                  className={`mt-8 flex min-h-11 w-full items-center justify-center gap-2 rounded-full text-[9px] font-medium uppercase tracking-[0.08em] transition ${
-                    plan.featured
-                      ? "bg-[#ff6900] text-black hover:brightness-105"
-                      : "border border-white/[0.1] bg-white/[0.025] text-white/50 hover:border-white/20 hover:text-white"
-                  }`}
-                >
-                  {plan.name === "Starter"
-                    ? "Get started"
-                    : "Talk to us"}
-
-                  <ArrowIcon />
-                </Link>
-              </article>
-            ))}
-          </div>
-
-          <div className="mt-4 flex flex-col justify-between gap-4 border-t border-white/[0.07] pt-5 sm:flex-row sm:items-center">
-            <span className="text-[8px] uppercase tracking-[0.1em] text-white/15">
-              All plans can be adapted to your workflow
-            </span>
-
-            <Link
-              href="#faq"
-              className="inline-flex items-center gap-2 text-[9px] uppercase tracking-[0.1em] text-white/30 transition-colors hover:text-white"
+          <div className="mt-6 flex flex-wrap items-baseline justify-between gap-4">
+            <p className="zahi-display" style={{ fontSize: 40, color: "#111315" }}>
+              ≈ ${best.c.toFixed(0)}
+              <span style={{ fontSize: 11, fontWeight: 400, color: "#9BAAB1" }}> / month</span>
+            </p>
+            <span
+              className="rounded-full px-4 py-2"
+              style={{ fontFamily: MONO, fontSize: 9, background: "#EDF8FD", color: "#28769D" }}
             >
-              Pricing questions
-              <ArrowIcon />
-            </Link>
+              BEST ON {best.name.toUpperCase()} · ${(best.c / images).toFixed(2)} / GEN
+            </span>
           </div>
         </div>
       </div>

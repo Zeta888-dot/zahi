@@ -1,484 +1,365 @@
 "use client";
 
-import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-type TryOnState = "idle" | "generating" | "complete";
+const accentColors = ["#28769D", "#111315", "#4DA878", "#D85D5D"];
+const positions = ["Bottom right", "Bottom left", "Inline"];
 
-function ArrowIcon() {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 14 14"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M2.5 7H11.5M8 3.5L11.5 7L8 10.5"
-        stroke="currentColor"
-        strokeWidth="1.25"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function CartIcon() {
-  return (
-    <svg
-      width="15"
-      height="15"
-      viewBox="0 0 16 16"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M2.5 3.5H4L5.1 10.2C5.2 10.8 5.7 11.2 6.3 11.2H12.1C12.6 11.2 13.1 10.8 13.2 10.3L14 5.5H4.4"
-        stroke="currentColor"
-        strokeWidth="1.15"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <circle cx="6.4" cy="13.2" r="1" fill="currentColor" />
-      <circle cx="12" cy="13.2" r="1" fill="currentColor" />
-    </svg>
-  );
-}
-
-function UserIcon() {
-  return (
-    <svg
-      width="15"
-      height="15"
-      viewBox="0 0 16 16"
-      fill="none"
-      aria-hidden="true"
-    >
-      <circle
-        cx="8"
-        cy="5"
-        r="2.5"
-        stroke="currentColor"
-        strokeWidth="1.15"
-      />
-      <path
-        d="M3.5 13C3.9 10.8 5.4 9.5 8 9.5C10.6 9.5 12.1 10.8 12.5 13"
-        stroke="currentColor"
-        strokeWidth="1.15"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function UploadIcon() {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 18 18"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M9 12V3.5M5.5 7L9 3.5L12.5 7"
-        stroke="currentColor"
-        strokeWidth="1.2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M4 14.5H14"
-        stroke="currentColor"
-        strokeWidth="1.2"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function CheckIcon() {
-  return (
-    <svg
-      width="13"
-      height="13"
-      viewBox="0 0 13 13"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M2.5 6.5L5.2 9L10.5 3.8"
-        stroke="currentColor"
-        strokeWidth="1.4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function TryOnPanel() {
-  const [state, setState] = useState<TryOnState>("idle");
-
-  const startTryOn = () => {
-    if (state === "generating") return;
-
-    setState("generating");
-
-    window.setTimeout(() => {
-      setState("complete");
-    }, 2200);
-  };
-
-  return (
-    <div className="rounded-[20px] border border-[#C8E0EA] bg-[#EDF8FD] p-4 sm:p-5">
-      <div className="flex items-center justify-between border-b border-[#D5E6ED] pb-4">
-        <div className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-[#28769D]">
-            <UserIcon />
-          </div>
-
-          <div>
-            <p className="text-[10px] font-semibold text-[#111315]">
-              Try on with Zahi
-            </p>
-
-            <p className="mt-0.5 text-[7px] text-[#718087]">
-              See this product on you
-            </p>
-          </div>
-        </div>
-
-        <span className="rounded-full bg-white px-2.5 py-1.5 text-[7px] font-semibold uppercase tracking-[0.1em] text-[#28769D]">
-          AI
-        </span>
-      </div>
-
-      {state === "idle" && (
-        <>
-          <div className="mt-4 grid grid-cols-2 gap-3">
-            <div className="overflow-hidden rounded-[14px] border border-[#D5E6ED] bg-white">
-              <div className="relative aspect-[0.82] bg-[#F4F8FA]">
-                <Image
-                  src="/hero/model.png"
-                  alt="Model wearing a product"
-                  fill
-                  className="object-cover"
-                  sizes="240px"
-                />
-              </div>
-
-              <div className="border-t border-[#E2EEF3] px-3 py-2.5">
-                <p className="text-[8px] font-medium text-[#46535A]">
-                  Your photo
-                </p>
-
-                <p className="mt-0.5 text-[7px] text-[#9BAAB1]">
-                  Ready
-                </p>
-              </div>
-            </div>
-
-            <div className="overflow-hidden rounded-[14px] border border-[#D5E6ED] bg-white">
-              <div className="relative aspect-[0.82] bg-[#F4F8FA]">
-                <Image
-                  src="/hero/garment.png"
-                  alt="Selected garment"
-                  fill
-                  className="object-contain p-5"
-                  sizes="240px"
-                />
-              </div>
-
-              <div className="border-t border-[#E2EEF3] px-3 py-2.5">
-                <p className="text-[8px] font-medium text-[#46535A]">
-                  Selected product
-                </p>
-
-                <p className="mt-0.5 text-[7px] text-[#9BAAB1]">
-                  Essential Shirt
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <button
-            type="button"
-            onClick={startTryOn}
-            className="mt-3 flex min-h-[43px] w-full items-center justify-center gap-2 rounded-full bg-[#111315] text-[9px] font-semibold text-white transition-transform duration-200 hover:scale-[0.99]"
-          >
-            Try it on
-            <ArrowIcon />
-          </button>
-        </>
-      )}
-
-      {state === "generating" && (
-        <div className="mt-4 rounded-[15px] border border-[#D5E6ED] bg-white p-5">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-[9px] font-semibold text-[#111315]">
-                Creating your try-on
-              </p>
-
-              <p className="mt-1 text-[7px] text-[#718087]">
-                Applying the product to your photo
-              </p>
-            </div>
-
-            <span className="text-[8px] font-semibold text-[#28769D]">
-              AI
-            </span>
-          </div>
-
-          <div className="mt-5 h-[3px] overflow-hidden rounded-full bg-[#E4F0F5]">
-            <div className="h-full w-full origin-left animate-[zahi-progress_2.2s_ease-in-out] rounded-full bg-[#5C9FC2]" />
-          </div>
-
-          <div className="mt-4 flex items-center gap-2">
-            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#5C9FC2]" />
-
-            <span className="text-[7px] text-[#718087]">
-              Generating realistic preview
-            </span>
-          </div>
-        </div>
-      )}
-
-      {state === "complete" && (
-        <>
-          <div className="mt-4 overflow-hidden rounded-[15px] border border-[#C5E0EB] bg-white">
-            <div className="flex items-center justify-between border-b border-[#E2EEF3] px-3.5 py-3">
-              <div>
-                <p className="text-[8px] font-semibold uppercase tracking-[0.1em] text-[#46535A]">
-                  Try-on result
-                </p>
-
-                <p className="mt-1 text-[7px] text-[#9BAAB1]">
-                  Generated by Zahi AI
-                </p>
-              </div>
-
-              <span className="flex items-center gap-1 rounded-full bg-[#EDF8FD] px-2.5 py-1.5 text-[7px] font-medium text-[#28769D]">
-                <CheckIcon />
-                Ready
-              </span>
-            </div>
-
-            <div className="relative aspect-[0.78] bg-[#F4F8FA]">
-              <Image
-                src="/hero/try-on-result.png"
-                alt="Virtual try-on result"
-                fill
-                className="object-cover"
-                sizes="500px"
-              />
-            </div>
-          </div>
-
-          <div className="mt-3 grid grid-cols-2 gap-2">
-            <button
-              type="button"
-              onClick={() => setState("idle")}
-              className="min-h-[40px] rounded-full border border-[#D5E6ED] bg-white text-[8px] font-medium text-[#46535A]"
-            >
-              Try again
-            </button>
-
-            <button
-              type="button"
-              className="flex min-h-[40px] items-center justify-center gap-2 rounded-full bg-[#111315] text-[8px] font-semibold text-white"
-            >
-              <CartIcon />
-              Add to cart
-            </button>
-          </div>
-        </>
-      )}
-
-      <div className="mt-4 flex items-center justify-between border-t border-[#D5E6ED] pt-3">
-        <span className="text-[7px] text-[#9BAAB1]">
-          Secure image processing
-        </span>
-
-        <span className="text-[7px] text-[#9BAAB1]">
-          Powered by Zahi
-        </span>
-      </div>
-    </div>
-  );
-}
+type Stage = "upload" | "generating" | "result";
 
 export default function WidgetSection() {
+  const [accent, setAccent] = useState(accentColors[0]);
+  const [pos, setPos] = useState(positions[0]);
+  const [open, setOpen] = useState(false);
+  const [stage, setStage] = useState<Stage>("upload");
+  const [photo, setPhoto] = useState("/hero/model.png");
+  const [custom, setCustom] = useState(false);
+  const [prog, setProg] = useState(0);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (stage === "generating") {
+      setProg(0);
+      const t = setTimeout(() => setProg(100), 60);
+      const t2 = setTimeout(() => setStage("result"), 1800);
+      return () => {
+        clearTimeout(t);
+        clearTimeout(t2);
+      };
+    }
+  }, [stage]);
+
+  const posBtn =
+    pos === "Bottom right"
+      ? "right-6 bottom-6"
+      : pos === "Bottom left"
+      ? "left-6 bottom-6"
+      : "bottom-6 left-1/2 -translate-x-1/2";
+
+  const winPos =
+    pos === "Bottom right"
+      ? "top-16 right-6"
+      : pos === "Bottom left"
+      ? "top-16 left-6"
+      : "top-16 left-1/2 -translate-x-1/2";
+
   return (
-    <section id="try-on" className="zahi-section">
-      <style jsx>{`
-        @keyframes zahi-progress {
-          0% {
-            transform: scaleX(0);
-          }
+    <section className="zahi-section">
+      <div className="zahi-content zahi-section-inner">
+        <div className="zahi-eyebrow mb-8">Embeddable widget</div>
 
-          30% {
-            transform: scaleX(0.32);
-          }
-
-          65% {
-            transform: scaleX(0.7);
-          }
-
-          100% {
-            transform: scaleX(1);
-          }
-        }
-      `}</style>
-
-      <div className="relative overflow-hidden bg-[#F8FCFE]">
-        <div
-          className="pointer-events-none absolute right-[-180px] top-[15%] h-[450px] w-[450px] rounded-full blur-[100px]"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(151,216,239,0.22) 0%, rgba(151,216,239,0) 70%)",
-          }}
-          aria-hidden="true"
-        />
-
-        <div className="zahi-container zahi-section-inner relative">
-          <div className="mb-10 max-w-[600px]">
-            <p className="zahi-eyebrow">
-              Virtual try-on
-            </p>
-
-            <h2 className="zahi-heading mt-6 text-[42px] sm:text-[54px] lg:text-[62px]">
-              See the product.
+        <div className="grid gap-16 lg:grid-cols-2 lg:items-start">
+          {/* Left: copy + controls */}
+          <div>
+            <h2 className="zahi-heading text-[40px] lg:text-[56px]">
+              One script tag,
               <br />
-              <span className="zahi-blue">Then try it on.</span>
+              <span className="zahi-blue">any website.</span>
             </h2>
 
-            <p className="zahi-body mt-6 max-w-[500px]">
-              Give shoppers a simple way to see how a product looks on them
-              before they add it to their cart.
+            <p className="zahi-body mt-8 max-w-[440px] text-[16px]">
+              Not on Shopify or WooCommerce? Paste one line and the try-on
+              widget lives on your site. Customize colors, position, and
+              behavior to match your brand.
             </p>
+
+            <div className="mt-10 space-y-8">
+              <div>
+                <p className="zahi-label mb-4">Accent color</p>
+                <div className="flex gap-3">
+                  {accentColors.map((c) => (
+                    <button
+                      key={c}
+                      onClick={() => setAccent(c)}
+                      className={`h-10 w-10 rounded-full border-2 transition-all ${
+                        accent === c ? "scale-110 border-[#111315] shadow-lg" : "border-transparent"
+                      }`}
+                      style={{ backgroundColor: c }}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <p className="zahi-label mb-4">Position</p>
+                <div className="flex flex-wrap gap-3">
+                  {positions.map((p) => (
+                    <button
+                      key={p}
+                      onClick={() => setPos(p)}
+                      style={{
+                        fontSize: 11,
+                        fontWeight: 500,
+                        lineHeight: 1,
+                        padding: "11px 18px",
+                        borderRadius: 9999,
+                        whiteSpace: "nowrap",
+                        border: `1px solid ${pos === p ? "#111315" : "#D5E6ED"}`,
+                        background: pos === p ? "#111315" : "#ffffff",
+                        color: pos === p ? "#ffffff" : "#46535A",
+                      }}
+                    >
+                      {p}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-10">
+              <p className="zahi-label mb-4">Embed code</p>
+              <div className="zahi-terminal">
+                <div className="zahi-terminal-bar">
+                  <div className="zahi-terminal-dots">
+                    <span className="zahi-terminal-dot" />
+                    <span className="zahi-terminal-dot" />
+                    <span className="zahi-terminal-dot" />
+                  </div>
+                  <span className="zahi-small">script.js</span>
+                </div>
+                <pre className="zahi-terminal-code">
+{`<script
+  src="https://cdn.zahi.pk/widget.js"
+  data-store="yourstore"
+  data-accent="${accent}"
+  data-position="${pos.toLowerCase().replace(" ", "-")}"
+  async
+></script>`}
+                </pre>
+              </div>
+            </div>
           </div>
 
-          {/* ONLY THE COMMERCE DEMO */}
-          <div className="grid overflow-hidden rounded-[24px] border border-[#D5E6ED] bg-white shadow-[0_24px_70px_rgba(54,103,126,0.09)] lg:grid-cols-[1fr_0.82fr]">
-            {/* Product card */}
-            <div className="p-5 sm:p-7 lg:p-8">
-              <div className="mb-5 flex items-center justify-between">
-                <span className="text-[7px] font-semibold uppercase tracking-[0.13em] text-[#9BAAB1]">
-                  New collection
-                </span>
-
-                <span className="text-[7px] text-[#9BAAB1]">
-                  In stock
+          {/* Right: live PDP preview */}
+          <div>
+            <div className="zahi-product-shell relative overflow-hidden">
+              {/* Browser bar */}
+              <div className="zahi-product-header">
+                <div className="flex items-center gap-3">
+                  <div className="zahi-terminal-dots">
+                    <span className="zahi-terminal-dot" />
+                    <span className="zahi-terminal-dot" />
+                    <span className="zahi-terminal-dot" />
+                  </div>
+                  <span className="rounded-full bg-[#F2F9FC] px-4 py-1.5 text-[10px] text-[#718087]">
+                    yourstore.com/products/racing-graphic-tee
+                  </span>
+                </div>
+                <span className="zahi-status">
+                  <span className="zahi-status-dot" />
+                  Live
                 </span>
               </div>
 
-              <div className="grid gap-5 sm:grid-cols-[1.02fr_0.98fr]">
-                {/* Product */}
-                <div>
-                  <div className="overflow-hidden rounded-[18px] bg-[#F4F8FA]">
-                    <div className="relative aspect-[0.9]">
-                      <Image
-                        src="/hero/garment.png"
-                        alt="Essential Shirt"
-                        fill
-                        className="object-contain p-8"
-                        sizes="500px"
-                      />
-                    </div>
+              {/* PDP body */}
+              <div className="grid gap-8 bg-white p-8 md:grid-cols-2">
+                <div className="relative overflow-hidden rounded-[16px] bg-[#F2F9FC]">
+                  <img
+                    src="/hero/garment.png"
+                    alt="Racing graphic tee, flat"
+                    className="aspect-[3/4] w-full object-cover"
+                  />
+                </div>
+
+                <div className="flex flex-col">
+                  <p className="zahi-overline">Home / Tees</p>
+                  <p className="zahi-heading mt-2 text-[24px]">Racing Graphic Tee</p>
+                  <div className="mt-2 flex items-center gap-2">
+                    <span className="text-[11px] text-[#E5B567]">★★★★★</span>
+                    <span className="zahi-small">128 reviews</span>
+                  </div>
+                  <p className="zahi-display mt-4 text-[26px]">PKR 4,900</p>
+
+                  <p className="zahi-label mt-6 mb-3">Color</p>
+                  <div className="flex gap-2">
+                    <span className="h-7 w-7 rounded-full border-2 border-[#111315] bg-[#111315]" />
+                    <span className="h-7 w-7 rounded-full bg-[#F1F0EE]" />
+                    <span className="h-7 w-7 rounded-full bg-[#D85D5D]" />
                   </div>
 
-                  <div className="mt-4">
-                    <p className="text-[7px] font-semibold uppercase tracking-[0.12em] text-[#9BAAB1]">
-                      Zahi Studio
-                    </p>
-
-                    <h3 className="mt-2 text-[22px] font-medium tracking-[-0.045em] text-[#111315]">
-                      Essential Shirt
-                    </h3>
-
-                    <p className="mt-2 text-[15px] font-medium text-[#111315]">
-                      Rs. 4,990
-                    </p>
-
-                    <p className="mt-3 text-[9px] leading-[1.6] text-[#718087]">
-                      Premium everyday shirt with a relaxed modern fit.
-                    </p>
-
-                    <div className="mt-4 flex gap-2">
-                      {["S", "M", "L", "XL"].map((size) => (
-                        <button
-                          key={size}
-                          type="button"
-                          className={`flex h-8 w-8 items-center justify-center rounded-[7px] border text-[7px] font-medium ${
-                            size === "M"
-                              ? "border-[#111315] bg-[#111315] text-white"
-                              : "border-[#D5E6ED] bg-white text-[#718087]"
-                          }`}
-                        >
-                          {size}
-                        </button>
-                      ))}
-                    </div>
-
-                    <div className="mt-4 flex gap-2">
-                      <button
-                        type="button"
-                        className="flex min-h-[42px] flex-1 items-center justify-center gap-2 rounded-full bg-[#111315] text-[8px] font-semibold text-white"
+                  <p className="zahi-label mt-5 mb-3">Size</p>
+                  <div className="flex gap-2">
+                    {["S", "M", "L", "XL"].map((s, i) => (
+                      <span
+                        key={s}
+                        className={`rounded-lg border px-3.5 py-2 text-[11px] font-medium ${
+                          i === 1
+                            ? "border-[#111315] bg-[#111315] text-white"
+                            : "border-[#D5E6ED] text-[#46535A]"
+                        }`}
                       >
-                        <CartIcon />
-                        Add to cart
-                      </button>
-                    </div>
+                        {s}
+                      </span>
+                    ))}
                   </div>
-                </div>
 
-                {/* Model */}
-                <div className="overflow-hidden rounded-[18px] bg-[#F4F8FA]">
-                  <div className="relative aspect-[0.9] h-full min-h-[320px]">
-                    <Image
-                      src="/hero/model.png"
-                      alt="Model preview"
-                      fill
-                      className="object-cover"
-                      sizes="500px"
-                    />
-
-                    <div className="absolute left-3 top-3 rounded-full bg-white/90 px-3 py-1.5 text-[7px] font-semibold uppercase tracking-[0.1em] text-[#46535A] backdrop-blur-sm">
-                      Customer preview
-                    </div>
-
-                    <div className="absolute inset-x-3 bottom-3 rounded-[12px] border border-white/70 bg-white/90 px-3 py-2.5 backdrop-blur-md">
-                      <p className="text-[8px] font-medium text-[#111315]">
-                        Your photo
-                      </p>
-
-                      <p className="mt-0.5 text-[7px] text-[#718087]">
-                        Ready for virtual try-on
-                      </p>
-                    </div>
+                  <div className="mt-6">
+                    <span className="zahi-button-primary w-full">Add to cart</span>
                   </div>
                 </div>
               </div>
+
+              {/* Widget window */}
+              {open && (
+                <div
+                  className={`absolute z-20 flex max-h-[calc(100%-5.5rem)] w-[300px] flex-col overflow-hidden rounded-[20px] bg-white shadow-[0_25px_70px_rgba(17,19,21,0.25)] ${winPos}`}
+                >
+                  <div
+                    className="flex shrink-0 items-center justify-between px-5 py-3.5"
+                    style={{ backgroundColor: accent }}
+                  >
+                    <div className="flex items-center gap-2">
+                      <span
+                        className="flex h-6 w-6 items-center justify-center rounded-full bg-white"
+                        style={{ color: accent, fontSize: 10, fontWeight: 700 }}
+                      >
+                        z.
+                      </span>
+                      <span style={{ fontSize: 11, fontWeight: 600, color: "#ffffff" }}>zahi try-on</span>
+                    </div>
+                    <button
+                      onClick={() => setOpen(false)}
+                      style={{ fontSize: 16, lineHeight: 1, color: "rgba(255,255,255,0.8)" }}
+                    >
+                      ×
+                    </button>
+                  </div>
+
+                  <div className="min-h-0 flex-1 overflow-y-auto">
+                    {stage === "upload" && (
+                      <div className="p-5">
+                        <p className="zahi-label mb-3">1 · Upload your photo</p>
+                        <button
+                          onClick={() => fileRef.current?.click()}
+                          className="relative flex h-56 w-full items-center justify-center overflow-hidden rounded-[14px] border border-dashed border-[#C4DBE5] bg-[#F8FCFE]"
+                        >
+                          <img src={photo} alt="Your photo" className="max-h-full w-full object-contain" />
+                          <span className="absolute right-2 bottom-2 rounded-full bg-white/90 px-3 py-1 text-[9px] font-semibold text-[#46535A]">
+                            {custom ? "Your photo · change" : "Default model · change"}
+                          </span>
+                        </button>
+                        <input
+                          ref={fileRef}
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) => {
+                            const f = e.target.files?.[0];
+                            if (f) {
+                              setPhoto(URL.createObjectURL(f));
+                              setCustom(true);
+                            }
+                          }}
+                        />
+                        <p className="zahi-small mt-3">
+                          Full-body photo, standing straight, works best.
+                        </p>
+                        <button
+                          onClick={() => setStage("generating")}
+                          className="mt-4 flex w-full items-center justify-center rounded-full text-white"
+                          style={{
+                            backgroundColor: accent,
+                            padding: "13px 18px",
+                            fontSize: 11,
+                            fontWeight: 600,
+                            lineHeight: 1,
+                            boxShadow: "0 10px 25px rgba(17,19,21,0.15)",
+                          }}
+                        >
+                          Generate try-on
+                        </button>
+                      </div>
+                    )}
+
+                    {stage === "generating" && (
+                      <div className="flex flex-col items-center gap-4 p-8">
+                        <div className="flex h-40 w-full items-center justify-center">
+                          <img src={photo} alt="" className="max-h-full object-contain opacity-80" />
+                        </div>
+                        <div className="h-1 w-full overflow-hidden rounded-full bg-[#E2EEF3]">
+                          <div
+                            className="h-full rounded-full"
+                            style={{ width: `${prog}%`, transition: "width 1.5s linear", backgroundColor: accent }}
+                          />
+                        </div>
+                        <p className="zahi-small">Generating your try-on · 0.8s</p>
+                      </div>
+                    )}
+
+                    {stage === "result" && (
+                      <div className="p-5">
+                        <div className="relative flex h-56 w-full items-center justify-center overflow-hidden rounded-[14px] bg-[#F8FCFE]">
+                          <img src="/hero/try-on-result.png" alt="Try-on result" className="max-h-full w-full object-contain" />
+                          <span className="absolute top-2 left-2 rounded-full bg-[#111315]/85 px-3 py-1 text-[9px] font-semibold tracking-[0.12em] text-white">
+                            TRY-ON · 0.8s
+                          </span>
+                        </div>
+                        <div className="mt-4 flex gap-2">
+                          <span
+                            className="flex-1 rounded-full bg-[#111315] py-3 text-center text-white"
+                            style={{ fontSize: 11, fontWeight: 600 }}
+                          >
+                            Download
+                          </span>
+                          <button
+                            onClick={() => {
+                              setStage("upload");
+                              setPhoto("/hero/model.png");
+                              setCustom(false);
+                            }}
+                            className="flex-1 rounded-full border border-[#D5E6ED] py-3"
+                            style={{ fontSize: 11, fontWeight: 600, color: "#46535A" }}
+                          >
+                            Start over
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <p className="shrink-0 border-t border-[#E2EEF3] px-5 py-3 text-center text-[9px] text-[#9BAAB1]">
+                    Powered by zahi
+                  </p>
+                </div>
+              )}
+
+              {/* Single floating widget button */}
+              {!open && (
+                <button
+                  onClick={() => {
+                    setOpen(true);
+                    setStage("upload");
+                  }}
+                  className={`absolute z-10 ${posBtn}`}
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 8,
+                    padding: "12px 18px",
+                    borderRadius: 9999,
+                    fontSize: 11,
+                    fontWeight: 600,
+                    lineHeight: 1,
+                    whiteSpace: "nowrap",
+                    backgroundColor: accent,
+                    color: "#ffffff",
+                    boxShadow: "0 12px 30px rgba(17,19,21,0.2)",
+                  }}
+                >
+                  <span
+                    className="flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full bg-white"
+                    style={{ color: accent, fontSize: 9, fontWeight: 700 }}
+                  >
+                    z.
+                  </span>
+                  Try it on
+                </button>
+              )}
             </div>
 
-            {/* Zahi widget */}
-            <div className="border-t border-[#E2EEF3] bg-[#F8FCFE] p-5 sm:p-7 lg:border-l lg:border-t-0 lg:p-8">
-              <div className="mb-5">
-                <p className="text-[7px] font-semibold uppercase tracking-[0.13em] text-[#9BAAB1]">
-                  Built into the product experience
-                </p>
-
-                <h3 className="mt-2 text-[20px] font-medium tracking-[-0.04em] text-[#111315]">
-                  Try it before you buy
-                </h3>
-              </div>
-
-              <TryOnPanel />
-            </div>
+            <p className="zahi-small mt-4 text-center">
+              Live preview · click the zahi button to open the widget
+            </p>
           </div>
         </div>
       </div>

@@ -1,248 +1,190 @@
-import Link from "next/link";
+"use client";
 
-function ArrowIcon() {
+import { useState } from "react";
+
+const samples: Record<string, string> = {
+  cURL: `curl -X POST https://api.zahi.pk/v1/try-on \\
+  -H "Authorization: Bearer zk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "garment_url": "https://.../racing-tee.png",
+    "model_id": "base_04"
+  }'`,
+  Node: `const res = await fetch(
+  "https://api.zahi.pk/v1/try-on",
+  {
+    method: "POST",
+    headers: {
+      Authorization: \`Bearer \${process.env.ZAHI_KEY}\`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      garment_url: "https://.../racing-tee.png",
+      model_id: "base_04",
+    }),
+  }
+);`,
+};
+
+const response = `{
+  "id": "try_9f2c",
+  "status": "completed",
+  "result_url": "https://cdn.zahi.pk/r/9f2c.png",
+  "model_id": "base_04",
+  "latency_ms": 812
+}`;
+
+function Code({ text }: { text: string }) {
   return (
-    <svg
-      viewBox="0 0 20 20"
-      fill="none"
-      className="h-4 w-4"
-      aria-hidden="true"
-    >
-      <path
-        d="M4 10h11M10.5 5.5 15 10l-4.5 4.5"
-        stroke="currentColor"
-        strokeWidth="1.4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-const codeLines = [
-  <><span className="text-white/25">{"{"}</span></>,
-  <>
-    <span className="text-[#ff6900]">"model"</span>
-    <span className="text-white/30">: </span>
-    <span className="text-white/60">"fashn-v1.6"</span>
-    <span className="text-white/25">,</span>
-  </>,
-  <>
-    <span className="text-[#ff6900]">"model_image"</span>
-    <span className="text-white/30">: </span>
-    <span className="text-white/60">"https://..."</span>
-    <span className="text-white/25">,</span>
-  </>,
-  <>
-    <span className="text-[#ff6900]">"garment_image"</span>
-    <span className="text-white/30">: </span>
-    <span className="text-white/60">"https://..."</span>
-    <span className="text-white/25">,</span>
-  </>,
-  <>
-    <span className="text-[#ff6900]">"category"</span>
-    <span className="text-white/30">: </span>
-    <span className="text-white/60">"tops"</span>
-  </>,
-  <><span className="text-white/25">{"}"}</span></>,
-];
-
-function EndpointRow({
-  method,
-  path,
-  description,
-}: {
-  method: string;
-  path: string;
-  description: string;
-}) {
-  return (
-    <div className="group grid gap-4 border-b border-white/[0.07] py-5 sm:grid-cols-[72px_1fr_auto] sm:items-center">
-      <span className="text-[8px] font-semibold uppercase tracking-[0.12em] text-[#ff6900]">
-        {method}
-      </span>
-
-      <div>
-        <code className="text-[11px] text-white/65">{path}</code>
-
-        <p className="mt-1.5 text-[9px] leading-[1.5] text-white/20 sm:hidden">
-          {description}
-        </p>
-      </div>
-
-      <span className="hidden text-[9px] text-white/20 sm:block">
-        {description}
-      </span>
-    </div>
+    <pre className="zahi-terminal-code">
+      {text.split("\n").map((line, i) => (
+        <span key={i} className="zahi-term-line" style={{ animationDelay: `${i * 70}ms` }}>
+          {line}
+        </span>
+      ))}
+      <span className="zahi-cursor" />
+    </pre>
   );
 }
 
 export default function ApiSection() {
+  const [lang, setLang] = useState<"cURL" | "Node">("cURL");
+  const [state, setState] = useState<"idle" | "running" | "done">("idle");
+
+  const run = () => {
+    if (state === "running") return;
+    setState("running");
+    setTimeout(() => setState("done"), 1200);
+  };
+
   return (
-    <section id="api" className="zahi-section">
-      <div className="relative overflow-hidden">
-        <div className="zahi-glow right-[-280px] top-[20%] h-[560px] w-[560px] opacity-35" />
+    <section className="zahi-section" id="api">
+      <div className="zahi-content zahi-section-inner">
+        <div className="zahi-eyebrow mb-8">Developer API</div>
 
-        <div className="zahi-container zahi-section-inner relative">
-          <div className="grid gap-14 lg:grid-cols-[0.8fr_1.2fr] lg:gap-24">
-            <div>
-              <div className="zahi-label">Developer API</div>
+        <div className="grid gap-16 lg:grid-cols-2 lg:items-start">
+          {/* Left: copy + request terminal */}
+          <div>
+            <h2 className="zahi-heading text-[40px] lg:text-[56px]">
+              Three endpoints.
+              <br />
+              <span className="zahi-blue">Zero magic.</span>
+            </h2>
 
-              <h2 className="mt-7 max-w-[560px] text-[43px] font-medium leading-[0.95] tracking-[-0.05em] sm:text-[59px]">
-                Your product.
-                <br />
-                Your stack.
-                <br />
-                <span className="zahi-orange">Our AI.</span>
-              </h2>
+            <p className="zahi-body mt-8 max-w-[440px] text-[16px]">
+              REST, JSON, API keys. Generate try-ons from your own backend,
+              CMS or app. Run the request right here to see the response.
+            </p>
 
-              <p className="mt-7 max-w-[450px] text-[14px] leading-[1.7] text-[var(--zahi-text-soft)]">
-                Build virtual try-on directly into your own product, app, or
-                commerce workflow with a simple API-first architecture.
-              </p>
-
-              <div className="mt-9 flex flex-wrap gap-3">
-                <Link href="#start" className="zahi-button-primary">
-                  Start building
-                  <ArrowIcon />
-                </Link>
-
-                <Link href="#faq" className="zahi-button-secondary">
-                  Read FAQ
-                </Link>
+            <div className="zahi-terminal mt-10">
+              <div className="zahi-terminal-bar">
+                <div className="flex items-center gap-2">
+                  {(["cURL", "Node"] as const).map((l) => (
+                    <button
+                      key={l}
+                      onClick={() => setLang(l)}
+                      style={{
+                        padding: "6px 12px",
+                        borderRadius: 9999,
+                        fontSize: 10,
+                        fontWeight: 600,
+                        background: lang === l ? "#28769D" : "transparent",
+                        color: lang === l ? "#ffffff" : "#7d97a3",
+                      }}
+                    >
+                      {l}
+                    </button>
+                  ))}
+                </div>
+                <button
+                  onClick={run}
+                  style={{
+                    padding: "7px 14px",
+                    borderRadius: 9999,
+                    fontSize: 10,
+                    fontWeight: 600,
+                    background: "#4DA878",
+                    color: "#ffffff",
+                  }}
+                >
+                  {state === "running" ? "Running..." : "Run"}
+                </button>
               </div>
-
-              <div className="mt-12 grid max-w-[450px] grid-cols-3 border-t border-white/[0.08]">
-                <div className="border-r border-white/[0.08] py-5 pr-4">
-                  <p className="text-[20px] font-medium tracking-[-0.04em]">
-                    API
-                  </p>
-                  <p className="mt-2 text-[8px] uppercase tracking-[0.1em] text-white/20">
-                    First
-                  </p>
-                </div>
-
-                <div className="border-r border-white/[0.08] px-4 py-5">
-                  <p className="text-[20px] font-medium tracking-[-0.04em]">
-                    JSON
-                  </p>
-                  <p className="mt-2 text-[8px] uppercase tracking-[0.1em] text-white/20">
-                    Native
-                  </p>
-                </div>
-
-                <div className="py-5 pl-4">
-                  <p className="text-[20px] font-medium tracking-[-0.04em]">
-                    AI
-                  </p>
-                  <p className="mt-2 text-[8px] uppercase tracking-[0.1em] text-white/20">
-                    Powered
-                  </p>
-                </div>
+              <div key={lang}>
+                <Code text={samples[lang]} />
               </div>
             </div>
 
-            <div>
-              <div className="zahi-terminal">
-                <div className="zahi-terminal-bar">
-                  <div className="zahi-terminal-dots">
-                    <span className="bg-[#ff5f57]" />
-                    <span className="bg-[#febc2e]" />
-                    <span className="bg-[#28c840]" />
-                  </div>
-
-                  <span className="text-[8px] uppercase tracking-[0.12em] text-white/20">
-                    request.json
-                  </span>
-
-                  <span className="rounded-md border border-white/[0.07] px-2 py-1 text-[7px] uppercase tracking-[0.08em] text-white/20">
-                    POST
-                  </span>
-                </div>
-
-                <div className="border-b border-white/[0.07] px-5 py-4 sm:px-6">
-                  <code className="text-[10px] text-white/35">
-                    /api/v1/tryon
-                  </code>
-                </div>
-
-                <div className="zahi-terminal-code">
-                  <div className="mb-4 text-[9px] uppercase tracking-[0.12em] text-white/15">
-                    Body
-                  </div>
-
-                  <div className="space-y-1">
-                    {codeLines.map((line, index) => (
-                      <div key={index} className="min-h-[20px]">
-                        <span className="mr-5 inline-block w-3 select-none text-right text-white/10">
-                          {index + 1}
-                        </span>
-                        {line}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="grid border-t border-white/[0.07] sm:grid-cols-3">
-                  <div className="border-b border-white/[0.07] px-5 py-4 sm:border-b-0 sm:border-r">
-                    <p className="text-[8px] uppercase tracking-[0.1em] text-white/15">
-                      Input
-                    </p>
-                    <p className="mt-2 text-[10px] text-white/45">
-                      Images
-                    </p>
-                  </div>
-
-                  <div className="border-b border-white/[0.07] px-5 py-4 sm:border-b-0 sm:border-r">
-                    <p className="text-[8px] uppercase tracking-[0.1em] text-white/15">
-                      Processing
-                    </p>
-                    <p className="mt-2 text-[10px] text-white/45">
-                      FASHN AI
-                    </p>
-                  </div>
-
-                  <div className="px-5 py-4">
-                    <p className="text-[8px] uppercase tracking-[0.1em] text-white/15">
-                      Output
-                    </p>
-                    <p className="mt-2 text-[10px] text-[#ff6900]">
-                      Image URL
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-8">
-                <div className="mb-1 flex items-center justify-between">
-                  <span className="zahi-label">Core endpoints</span>
-
-                  <span className="text-[8px] uppercase tracking-[0.1em] text-white/15">
-                    v1
-                  </span>
-                </div>
-
-                <div className="mt-3 border-t border-white/[0.07]">
-                  <EndpointRow
-                    method="POST"
-                    path="/api/v1/tryon"
-                    description="Create a generation"
-                  />
-
-                  <EndpointRow
-                    method="GET"
-                    path="/api/v1/tryon/:id"
-                    description="Check generation"
-                  />
-
-                  <EndpointRow
-                    method="GET"
-                    path="/api/v1/models"
-                    description="List available models"
-                  />
-                </div>
-              </div>
+            <div className="mt-6 flex flex-wrap gap-3">
+              {["POST /v1/try-on", "GET /v1/try-on/{id}", "GET /v1/models"].map((e) => (
+                <span
+                  key={e}
+                  className="rounded-full border border-[#D5E6ED] bg-white px-4 py-2"
+                  style={{ fontSize: 10, fontWeight: 600, color: "#46535A" }}
+                >
+                  {e}
+                </span>
+              ))}
             </div>
+          </div>
+
+          {/* Right: response panel */}
+          <div className="zahi-terminal">
+            <div className="zahi-terminal-bar">
+              <span className="zahi-small">response</span>
+              <span className="zahi-status">
+                {state === "done" ? (
+                  <>
+                    <span className="zahi-status-dot" />
+                    200 · 812ms
+                  </>
+                ) : state === "running" ? (
+                  <>
+                    <span className="zahi-status-dot zahi-status-dot-blue animate-pulse" />
+                    pending
+                  </>
+                ) : (
+                  <>
+                    <span className="zahi-status-dot opacity-30" />
+                    idle
+                  </>
+                )}
+              </span>
+            </div>
+
+            {state === "idle" && (
+              <div className="flex h-64 flex-col items-center justify-center gap-3 p-6">
+                <p style={{ fontSize: 12, color: "#7d97a3" }}>No request sent yet</p>
+                <p style={{ fontSize: 10, color: "#52707e" }}>
+                  Press Run to call the try-on endpoint
+                </p>
+              </div>
+            )}
+
+            {state === "running" && (
+              <div className="flex h-64 flex-col items-center justify-center gap-4 p-6">
+                <div className="h-1 w-[60%] overflow-hidden rounded-full bg-[#1c2b34]">
+                  <div className="h-full w-full animate-pulse rounded-full bg-[#28769D]" />
+                </div>
+                <p style={{ fontSize: 10, color: "#7d97a3" }}>Generating try-on...</p>
+              </div>
+            )}
+
+            {state === "done" && (
+              <div className="grid gap-6 p-6 sm:grid-cols-2">
+                <Code text={response} />
+                <div className="relative overflow-hidden rounded-[14px]">
+                  <img
+                    src="/hero/try-on-result.png"
+                    alt="Try-on result"
+                    className="h-full w-full object-cover"
+                  />
+                  <span className="absolute top-2 left-2 rounded-full bg-[#111315]/85 px-3 py-1 text-[9px] font-semibold tracking-[0.12em] text-white">
+                    RESULT · 0.8s
+                  </span>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

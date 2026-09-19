@@ -1,173 +1,202 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
 const steps = [
   {
-    number: "01",
-    title: "Add your product",
-    description:
-      "Upload a garment image or connect your existing product catalog.",
+    n: "01",
+    t: "Upload garment",
+    d: "Drop a product photo. The garment is isolated automatically, no masking, no studio.",
+    img: "/hero/garment.png",
+    meta: "INPUT · PNG",
   },
   {
-    number: "02",
-    title: "Add a model",
-    description:
-      "Use a customer photo or provide a model image for the virtual try-on.",
+    n: "02",
+    t: "Pick a model",
+    d: "Forty base models or your own. Pose, ethnicity and size dialed per campaign.",
+    img: "/hero/model.png",
+    meta: "BASE · 04",
   },
   {
-    number: "03",
-    title: "Generate",
-    description:
-      "Zahi processes both images and creates a realistic try-on result.",
+    n: "03",
+    t: "Generate",
+    d: "Photorealistic try-on in 0.8s. Fabric, drape and color preserved to the stitch.",
+    img: "/hero/try-on-result.png",
+    meta: "OUT · 0.8s",
   },
 ];
 
-function ArrowIcon() {
-  return (
-    <svg
-      viewBox="0 0 20 20"
-      fill="none"
-      className="h-4 w-4"
-      aria-hidden="true"
-    >
-      <path
-        d="M4 10h11M10.5 5.5 15 10l-4.5 4.5"
-        stroke="currentColor"
-        strokeWidth="1.4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function ProcessVisual() {
-  return (
-    <div className="relative min-h-[430px] overflow-hidden rounded-[26px] border border-white/[0.09] bg-[#0a0a0a]">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_45%,rgba(255,105,0,0.1),transparent_45%)]" />
-
-      <div className="absolute left-[8%] top-[10%] text-[7px] uppercase tracking-[0.14em] text-white/15">
-        Generation flow
-      </div>
-
-      <div className="absolute left-[9%] top-[26%] h-[125px] w-[95px] rotate-[-6deg] rounded-2xl border border-white/[0.09] bg-[#111111] shadow-2xl">
-        <div className="absolute inset-2 rounded-xl bg-[#181818]">
-          <div className="absolute left-1/2 top-[18%] h-[27px] w-[27px] -translate-x-1/2 rounded-full bg-[linear-gradient(145deg,#d3aa8e,#755141)]" />
-
-          <div className="absolute left-1/2 top-[39%] h-[53px] w-[42px] -translate-x-1/2 rounded-[13px_13px_8px_8px] bg-[linear-gradient(145deg,#c38a60,#65422f)]" />
-
-          <div className="absolute bottom-[8%] left-1/2 h-[30px] w-[9px] -translate-x-[12px] rounded-full bg-[#292929]" />
-
-          <div className="absolute bottom-[8%] left-1/2 h-[30px] w-[9px] translate-x-[3px] rounded-full bg-[#292929]" />
-        </div>
-
-        <span className="absolute -bottom-7 left-0 text-[7px] uppercase tracking-[0.1em] text-white/20">
-          Model
-        </span>
-      </div>
-
-      <div className="absolute left-[39%] top-[43%] flex h-9 w-9 items-center justify-center rounded-full border border-[#ff6900]/30 bg-[#ff6900]/[0.08] text-[#ff6900]">
-        <ArrowIcon />
-      </div>
-
-      <div className="absolute right-[9%] top-[21%] h-[155px] w-[115px] rotate-[5deg] rounded-2xl border border-[#ff6900]/20 bg-[#111111] shadow-[0_30px_80px_rgba(0,0,0,0.45)]">
-        <div className="absolute inset-2 rounded-xl bg-[linear-gradient(160deg,#252525,#101010)]">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,rgba(255,105,0,0.16),transparent_55%)]" />
-
-          <div className="absolute left-1/2 top-[14%] h-[30px] w-[28px] -translate-x-1/2 rounded-full bg-[linear-gradient(145deg,#d3aa8e,#755141)]" />
-
-          <div className="absolute left-1/2 top-[34%] h-[62px] w-[50px] -translate-x-1/2 rounded-[15px_15px_9px_9px] bg-[linear-gradient(145deg,#c58c62,#704831)]" />
-
-          <div className="absolute bottom-[5%] left-1/2 h-[38px] w-[10px] -translate-x-[13px] rounded-full bg-[#252525]" />
-
-          <div className="absolute bottom-[5%] left-1/2 h-[38px] w-[10px] translate-x-[3px] rounded-full bg-[#252525]" />
-        </div>
-
-        <div className="absolute -bottom-7 right-0 flex items-center gap-1.5 text-[7px] uppercase tracking-[0.1em] text-[#ff6900]">
-          <span className="h-1.5 w-1.5 rounded-full bg-[#ff6900]" />
-          Generated
-        </div>
-      </div>
-
-      <div className="absolute bottom-[12%] left-[17%] h-[115px] w-[90px] rotate-[4deg] rounded-2xl border border-white/[0.08] bg-[#101010]">
-        <div className="absolute inset-3 rounded-xl border border-white/[0.05] bg-[#161616]">
-          <div className="absolute left-1/2 top-[22%] h-[48px] w-[38px] -translate-x-1/2 rounded-[8px_8px_13px_13px] bg-[linear-gradient(145deg,#bd855a,#75482f)]" />
-
-          <div className="absolute left-[19%] top-[25%] h-[40px] w-[7px] -rotate-[8deg] rounded-full bg-[#76503c]" />
-
-          <div className="absolute right-[19%] top-[25%] h-[40px] w-[7px] rotate-[8deg] rounded-full bg-[#76503c]" />
-        </div>
-
-        <span className="absolute -bottom-7 left-0 text-[7px] uppercase tracking-[0.1em] text-white/20">
-          Garment
-        </span>
-      </div>
-
-      <div className="absolute bottom-[18%] left-[45%] flex h-9 w-9 items-center justify-center rounded-full border border-white/[0.09] bg-[#111111] text-white/30">
-        <span className="text-[10px] font-medium">+</span>
-      </div>
-
-      <div className="absolute bottom-[9%] right-[10%] flex items-center gap-2 rounded-full border border-white/[0.08] bg-[#111111] px-3 py-2">
-        <span className="h-1.5 w-1.5 rounded-full bg-[#28c840]" />
-
-        <span className="text-[7px] uppercase tracking-[0.09em] text-white/30">
-          Ready for storefront
-        </span>
-      </div>
-    </div>
-  );
-}
+const MONO = '"JetBrains Mono", monospace';
 
 export default function HowItWorks() {
+  const [active, setActive] = useState(0);
+
+  useEffect(() => {
+    const t = setInterval(() => setActive((a) => (a + 1) % steps.length), 4000);
+    return () => clearInterval(t);
+  }, []);
+
   return (
-    <section id="how-it-works" className="zahi-section">
-      <div className="relative overflow-hidden">
-        <div className="zahi-container zahi-section-inner">
-          <div className="grid gap-14 lg:grid-cols-[0.85fr_1.15fr] lg:gap-24">
-            <div>
-              <div className="zahi-label">How it works</div>
+    <section id="how-it-works" className="zahi-section relative overflow-hidden">
+      <div className="zahi-glow zahi-float-slow pointer-events-none absolute top-24 right-0" />
+      <div className="zahi-glow-small zahi-float pointer-events-none absolute bottom-24 left-8" />
 
-              <h2 className="mt-7 max-w-[560px] text-[43px] font-medium leading-[0.95] tracking-[-0.05em] sm:text-[59px]">
-                From product
-                <br />
-                image to
-                <br />
-                <span className="zahi-orange">try-on.</span>
-              </h2>
+      <div className="zahi-content relative" style={{ paddingBlock: 130 }}>
+        {/* Header */}
+        <div className="flex flex-wrap items-end justify-between gap-8">
+          <div>
+            <p className="zahi-eyebrow">How it works</p>
+            <h2 className="zahi-heading mt-6" style={{ fontSize: "clamp(40px, 6vw, 72px)" }}>
+              Flat lay to fit,
+              <br />
+              <span className="zahi-blue">in three moves.</span>
+            </h2>
+          </div>
+          <p style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.14em", color: "#9BAAB1" }}>
+            AVG SESSION · 47s
+          </p>
+        </div>
 
-              <p className="mt-7 max-w-[430px] text-[14px] leading-[1.7] text-[var(--zahi-text-soft)]">
-                A simple workflow designed to fit into the way your team
-                already works. No manual compositing or expensive studio
-                production.
-              </p>
-
-              <div className="mt-10 border-t border-white/[0.08]">
-                {steps.map((step) => (
-                  <div
-                    key={step.number}
-                    className="grid grid-cols-[45px_1fr] gap-4 border-b border-white/[0.08] py-6"
-                  >
-                    <span className="text-[9px] font-semibold tracking-[0.1em] text-[#ff6900]">
-                      {step.number}
-                    </span>
-
-                    <div>
-                      <h3 className="text-[17px] font-medium tracking-[-0.02em]">
-                        {step.title}
-                      </h3>
-
-                      <p className="mt-2 max-w-[370px] text-[11px] leading-[1.65] text-white/30">
-                        {step.description}
-                      </p>
-                    </div>
-                  </div>
-                ))}
+        {/* Stepper */}
+        <div className="mt-20 grid md:grid-cols-3">
+          {steps.map((s, i) => (
+            <button
+              key={s.n}
+              onClick={() => setActive(i)}
+              className="px-0 py-6 text-left md:px-8 md:first:pl-0"
+              style={{
+                borderLeft: i === 0 ? "none" : "1px solid #E2EEF3",
+              }}
+            >
+              <div className="flex items-baseline justify-between">
+                <span
+                  style={{
+                    fontFamily: MONO,
+                    fontSize: 12,
+                    color: active === i ? "#28769D" : "#B9C7CD",
+                    transition: "color 400ms ease",
+                  }}
+                >
+                  {s.n}
+                </span>
+                <span style={{ fontFamily: MONO, fontSize: 9, color: "#B9C7CD" }}>
+                  {s.meta}
+                </span>
               </div>
+              <p
+                className="mt-4"
+                style={{
+                  fontSize: 18,
+                  fontWeight: 600,
+                  color: active === i ? "#111315" : "#718087",
+                  transition: "color 400ms ease",
+                }}
+              >
+                {s.t}
+              </p>
+              <p className="mt-2" style={{ fontSize: 12, lineHeight: 1.7, color: "#718087" }}>
+                {s.d}
+              </p>
+              <div className="mt-6 h-px w-full" style={{ background: "#E2EEF3" }}>
+                {active === i && (
+                  <div
+                    key={active}
+                    className="h-px"
+                    style={{
+                      background: "#28769D",
+                      width: "100%",
+                      animation: "zahi-progress 4s linear forwards",
+                    }}
+                  />
+                )}
+              </div>
+            </button>
+          ))}
+        </div>
+
+        {/* Stage */}
+        <div className="relative mx-auto mt-16 max-w-[780px]">
+          <div className="zahi-product-shell">
+            {/* window bar */}
+            <div className="zahi-product-header">
+              <div className="zahi-terminal-dots">
+                <span className="zahi-terminal-dot" />
+                <span className="zahi-terminal-dot" />
+                <span className="zahi-terminal-dot" />
+              </div>
+              <span style={{ fontFamily: MONO, fontSize: 9, color: "#9BAAB1" }}>
+                zahi studio · session 0x9f2
+              </span>
             </div>
 
-            <div className="flex items-center">
-              <ProcessVisual />
+            {/* image stage */}
+            <div
+              className="relative h-[360px] md:h-[440px]"
+              style={{
+                background: "linear-gradient(160deg, #F8FCFE 0%, #EDF8FD 100%)",
+              }}
+            >
+              {steps.map((s, i) => (
+                <div
+                  key={s.n}
+                  className="absolute inset-0 flex items-center justify-center p-8"
+                  style={{
+                    opacity: active === i ? 1 : 0,
+                    transform: active === i ? "scale(1)" : "scale(1.06)",
+                    filter: active === i ? "blur(0px)" : "blur(8px)",
+                    transition: "opacity 900ms ease, transform 900ms ease, filter 900ms ease",
+                  }}
+                >
+                  <img
+                    src={s.img}
+                    alt={s.t}
+                    className="max-h-full w-auto max-w-full rounded-[14px] object-contain"
+                    style={{ boxShadow: "0 30px 80px rgba(54,103,126,0.25)" }}
+                  />
+                </div>
+              ))}
+
+              {/* grid overlay */}
+              <div
+                className="pointer-events-none absolute inset-0"
+                style={{
+                  backgroundImage:
+                    "linear-gradient(rgba(67,122,145,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(67,122,145,0.04) 1px, transparent 1px)",
+                  backgroundSize: "48px 48px",
+                }}
+              />
+
+              {/* chips */}
+              <span
+                className="absolute bottom-4 left-4 rounded-full px-3 py-1.5 backdrop-blur"
+                style={{
+                  fontFamily: MONO,
+                  fontSize: 9,
+                  letterSpacing: "0.12em",
+                  color: "#28769D",
+                  background: "rgba(255,255,255,0.85)",
+                  border: "1px solid #C4DBE5",
+                }}
+              >
+                {steps[active].meta}
+              </span>
+              <span
+                className="absolute right-4 bottom-4"
+                style={{ fontFamily: MONO, fontSize: 9, color: "#9BAAB1" }}
+              >
+                {steps[active].n} / 03
+              </span>
             </div>
           </div>
         </div>
       </div>
+
+      <style>{`
+        @keyframes zahi-progress {
+          from { width: 0%; }
+          to { width: 100%; }
+        }
+      `}</style>
     </section>
   );
 }

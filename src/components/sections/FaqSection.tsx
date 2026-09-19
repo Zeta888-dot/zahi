@@ -2,165 +2,126 @@
 
 import { useState } from "react";
 
-type Faq = {
-  question: string;
-  answer: string;
-};
-
-const faqs: Faq[] = [
+const faqs = [
   {
-    question: "What is Zahi?",
-    answer:
-      "Zahi is a virtual try-on platform that helps fashion businesses generate realistic product try-ons using AI. It can be used through storefront experiences or integrated into custom products through an API.",
+    q: "How realistic are the try-ons?",
+    a: "Fabric texture, drape and color are preserved to the stitch. Shoppers regularly rate zahi outputs indistinguishable from studio photography in blind tests.",
   },
   {
-    question: "Do I need a photoshoot for every product?",
-    answer:
-      "No. The workflow is designed around existing product and model imagery, so you can create try-on experiences without producing a new photoshoot for every combination.",
+    q: "Do I need model releases?",
+    a: "No. Base models are licensed synthetic personas. If you train a custom model on your own fits, you confirm you hold consent for the source photos.",
   },
   {
-    question: "Can I use Zahi with my existing store?",
-    answer:
-      "Yes. Zahi is being designed to work with common commerce workflows, including Shopify and WooCommerce, while also supporting custom integrations through an API.",
+    q: "Which platforms are supported?",
+    a: "Shopify and WooCommerce via native plugins, any other stack via the embeddable widget, and everything through the public REST API.",
   },
   {
-    question: "Which AI model powers the try-on?",
-    answer:
-      "The current product direction uses FASHN AI v1.6 for virtual try-on generation. The API layer is kept separate so the underlying generation service can evolve without requiring your storefront to be rebuilt.",
+    q: "How long does a generation take?",
+    a: "Median 0.8 seconds on our edge fleet. Batch catalog jobs run asynchronously and notify your webhook on completion.",
   },
   {
-    question: "Can developers integrate Zahi directly?",
-    answer:
-      "Yes. The API workflow is intended for developers who want to build virtual try-on directly into their own applications, commerce experiences, or internal tools.",
+    q: "Can I use my own models?",
+    a: "Yes. Upload 10 to 20 photos of your fit model and a custom base model is trained in under a day, exclusive to your workspace.",
   },
   {
-    question: "How does pricing work?",
-    answer:
-      "Pricing can depend on generation volume, integration requirements, and the type of production workflow you need. Contact the team to discuss a setup for your use case.",
+    q: "What does it cost?",
+    a: "Fifty try-ons free every month. After that you pay per result, from $0.10 per try-on. No seats, no contracts.",
   },
 ];
 
-function PlusIcon({ open }: { open: boolean }) {
-  return (
-    <svg
-      viewBox="0 0 20 20"
-      fill="none"
-      className={`h-4 w-4 transition-transform duration-300 ${
-        open ? "rotate-45" : ""
-      }`}
-      aria-hidden="true"
-    >
-      <path
-        d="M10 4v12M4 10h12"
-        stroke="currentColor"
-        strokeWidth="1.25"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
 export default function FaqSection() {
-  const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const [open, setOpen] = useState(0);
 
   return (
-    <section id="faq" className="zahi-section">
-      <div className="relative overflow-hidden">
-        <div className="zahi-glow right-[-250px] top-[10%] h-[500px] w-[500px] opacity-25" />
+    <section className="zahi-section" id="faq">
+      <div className="zahi-content zahi-section-inner">
+        <div className="grid gap-16 lg:grid-cols-[1fr_1.4fr] lg:items-start">
+          {/* Left */}
+          <div>
+            <p className="zahi-eyebrow">FAQ</p>
+            <h2 className="zahi-heading mt-6 text-[40px] lg:text-[56px]">
+              Questions,
+              <br />
+              <span className="zahi-blue">answered.</span>
+            </h2>
 
-        <div className="zahi-container zahi-section-inner relative">
-          <div className="grid gap-14 lg:grid-cols-[0.7fr_1.3fr] lg:gap-24">
-            <div>
-              <div className="zahi-label">FAQ</div>
-
-              <h2 className="mt-7 max-w-[520px] text-[43px] font-medium leading-[0.95] tracking-[-0.05em] sm:text-[59px]">
-                Questions,
-                <br />
-                answered
-                <br />
-                <span className="zahi-orange">simply.</span>
-              </h2>
-
-              <p className="mt-7 max-w-[380px] text-[13px] leading-[1.7] text-[var(--zahi-text-soft)]">
-                Everything you need to understand the product, integrations,
-                API workflow, and how virtual try-on fits into your commerce
-                stack.
+            <div className="zahi-panel-raised mt-10 p-6">
+              <p style={{ fontSize: 13, fontWeight: 600, color: "#111315" }}>
+                Still unsure?
               </p>
-
-              <div className="mt-10 hidden border-t border-white/[0.08] pt-5 lg:block">
-                <span className="text-[8px] uppercase tracking-[0.12em] text-white/15">
-                  Still have questions?
-                </span>
-
-                <p className="mt-3 text-[11px] leading-[1.6] text-white/30">
-                  Reach out and we can discuss your specific implementation.
-                </p>
-              </div>
-            </div>
-
-            <div className="border-t border-white/[0.08]">
-              {faqs.map((faq, index) => {
-                const open = openIndex === index;
-
-                return (
-                  <div
-                    key={faq.question}
-                    className="border-b border-white/[0.08]"
-                  >
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setOpenIndex(open ? null : index)
-                      }
-                      aria-expanded={open}
-                      className="zahi-focus flex min-h-[78px] w-full items-center justify-between gap-8 text-left"
-                    >
-                      <span
-                        className={`text-[14px] font-medium tracking-[-0.015em] transition-colors duration-300 sm:text-[15px] ${
-                          open ? "text-white" : "text-white/55"
-                        }`}
-                      >
-                        {faq.question}
-                      </span>
-
-                      <span
-                        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full border transition-all duration-300 ${
-                          open
-                            ? "border-[#ff6900]/30 bg-[#ff6900]/[0.08] text-[#ff6900]"
-                            : "border-white/[0.08] text-white/25"
-                        }`}
-                      >
-                        <PlusIcon open={open} />
-                      </span>
-                    </button>
-
-                    <div
-                      className={`grid transition-[grid-template-rows,opacity] duration-300 ${
-                        open
-                          ? "grid-rows-[1fr] opacity-100"
-                          : "grid-rows-[0fr] opacity-0"
-                      }`}
-                    >
-                      <div className="overflow-hidden">
-                        <div className="max-w-[620px] pb-7 pr-12 text-[12px] leading-[1.75] text-white/30">
-                          {faq.answer}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
+              <p className="zahi-small mt-2" style={{ lineHeight: 1.6 }}>
+                Talk to a human. We reply within one business day, PKT.
+              </p>
+              <a
+                href="/contact"
+                className="zahi-button-secondary mt-5"
+                style={{ display: "inline-flex" }}
+              >
+                Contact us
+              </a>
             </div>
           </div>
 
-          <div className="mt-12 border-t border-white/[0.08] pt-5 lg:hidden">
-            <span className="text-[8px] uppercase tracking-[0.12em] text-white/15">
-              Still have questions?
-            </span>
+          {/* Right: accordion */}
+          <div>
+            {faqs.map((f, i) => (
+              <div
+                key={f.q}
+                style={{
+                  borderTop: i === 0 ? "1px solid #E2EEF3" : "none",
+                  borderBottom: "1px solid #E2EEF3",
+                }}
+              >
+                <button
+                  onClick={() => setOpen(open === i ? -1 : i)}
+                  className="flex w-full items-center justify-between gap-6 py-6 text-left"
+                >
+                  <span
+                    style={{
+                      fontSize: 15,
+                      fontWeight: 600,
+                      color: open === i ? "#111315" : "#46535A",
+                      transition: "color 300ms ease",
+                    }}
+                  >
+                    {f.q}
+                  </span>
+                  <span
+                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full"
+                    style={{
+                      border: "1px solid #D5E6ED",
+                      background: open === i ? "#111315" : "#ffffff",
+                      color: open === i ? "#ffffff" : "#718087",
+                      transition: "all 300ms ease",
+                      transform: open === i ? "rotate(45deg)" : "rotate(0deg)",
+                    }}
+                  >
+                    <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
+                      <path d="M6 1v10M1 6h10" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+                    </svg>
+                  </span>
+                </button>
 
-            <p className="mt-3 text-[11px] leading-[1.6] text-white/30">
-              Reach out and we can discuss your specific implementation.
-            </p>
+                <div
+                  className="grid transition-all duration-500 ease-out"
+                  style={{ gridTemplateRows: open === i ? "1fr" : "0fr" }}
+                >
+                  <div className="overflow-hidden">
+                    <p
+                      className="pb-6"
+                      style={{
+                        fontSize: 13,
+                        lineHeight: 1.7,
+                        color: "#718087",
+                        maxWidth: 560,
+                      }}
+                    >
+                      {f.a}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>

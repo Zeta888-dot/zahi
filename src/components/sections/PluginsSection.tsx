@@ -1,221 +1,244 @@
-import Link from "next/link";
+"use client";
 
-type Integration = {
-  name: string;
-  description: string;
-  status: string;
-  logo: string;
-};
+import { useEffect, useState } from "react";
 
-const integrations: Integration[] = [
+const platforms = [
   {
     name: "Shopify",
-    description:
-      "Bring virtual try-on directly into your Shopify product experience.",
-    status: "Integration",
-    logo: "https://cdn.simpleicons.org/shopify",
+    icon: <img src="https://cdn.simpleicons.org/shopify/95BF47" alt="Shopify" className="h-4 w-4 object-contain" />,
   },
   {
     name: "WooCommerce",
-    description:
-      "Connect your WooCommerce catalog with a dedicated try-on workflow.",
-    status: "Integration",
-    logo: "https://cdn.simpleicons.org/woocommerce",
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+        <path
+          d="M12 2.5c-6.1 0-11 4.2-11 9.4 0 3 1.7 5.7 4.3 7.4-.1.9-.6 2.2-1.5 3.2 0 0 2.7-.4 4.6-1.7 1.1.3 2.4.5 3.6.5 6.1 0 11-4.2 11-9.4S18.1 2.5 12 2.5z"
+          fill="#7F54B3"
+        />
+        <path d="M5.8 9.5l1.4 4.6 1.9-3.9 1.9 3.9 1.4-4.6" stroke="#fff" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+        <circle cx="14.6" cy="12.2" r="1.9" stroke="#fff" strokeWidth="1.4" />
+        <circle cx="19" cy="12.2" r="1.9" stroke="#fff" strokeWidth="1.4" />
+      </svg>
+    ),
   },
 ];
 
-function ArrowIcon() {
-  return (
-    <svg
-      viewBox="0 0 20 20"
-      fill="none"
-      className="h-4 w-4"
-      aria-hidden="true"
-    >
-      <path
-        d="M4 10h11M10.5 5.5 15 10l-4.5 4.5"
-        stroke="currentColor"
-        strokeWidth="1.4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function StorePreview() {
-  return (
-    <div className="relative overflow-hidden rounded-[22px] border border-white/[0.09] bg-[#0a0a0a] shadow-[0_30px_90px_rgba(0,0,0,0.3)]">
-      <div className="flex h-11 items-center justify-between border-b border-white/[0.07] px-4 sm:px-5">
-        <div className="flex items-center gap-1.5">
-          <span className="h-2 w-2 rounded-full bg-[#ff5f57]" />
-          <span className="h-2 w-2 rounded-full bg-[#febc2e]" />
-          <span className="h-2 w-2 rounded-full bg-[#28c840]" />
-        </div>
-
-        <span className="text-[8px] font-medium uppercase tracking-[0.14em] text-white/20">
-          your-store.com
-        </span>
-
-        <span className="h-5 w-5 rounded-md border border-white/[0.07]" />
-      </div>
-
-      <div className="grid gap-4 p-4 sm:grid-cols-[1fr_0.82fr] sm:p-5">
-        <div className="relative flex min-h-[220px] items-center justify-center overflow-hidden rounded-xl border border-white/[0.06] bg-[#141414] sm:min-h-[235px]">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(255,105,0,0.14),transparent_62%)]" />
-
-          <div className="relative h-[145px] w-[100px]">
-            <div className="absolute left-[24px] top-0 h-[40px] w-[52px] rounded-[16px_16px_7px_7px] bg-[linear-gradient(145deg,#d19a6d,#70452e)]" />
-
-            <div className="absolute left-[12px] top-[31px] h-[98px] w-[76px] rounded-[10px_10px_17px_17px] bg-[linear-gradient(145deg,#bd8358,#70462f_70%,#402a20)]" />
-
-            <div className="absolute left-[49px] top-[35px] h-[86px] w-px bg-black/25" />
-
-            <div className="absolute left-[13px] top-[37px] h-[74px] w-[13px] -rotate-[8deg] rounded-full bg-[linear-gradient(#bd8058,#62402e)]" />
-
-            <div className="absolute right-[13px] top-[37px] h-[74px] w-[13px] rotate-[8deg] rounded-full bg-[linear-gradient(#bd8058,#62402e)]" />
-          </div>
-
-          <div className="absolute bottom-3 left-3">
-            <p className="text-[7px] font-medium uppercase tracking-[0.1em] text-white/20">
-              Product
-            </p>
-            <p className="mt-1 text-[8px] text-white/35">Blazer / Brown</p>
-          </div>
-        </div>
-
-        <div className="flex flex-col justify-between">
-          <div>
-            <div className="h-2.5 w-24 rounded-full bg-white/[0.08]" />
-            <div className="mt-2 h-2 w-16 rounded-full bg-white/[0.05]" />
-
-            <div className="mt-8 h-3 w-28 rounded-full bg-white/[0.08]" />
-
-            <div className="mt-4 grid grid-cols-3 gap-2">
-              <span className="h-7 rounded-md border border-white/[0.06] bg-white/[0.02]" />
-              <span className="h-7 rounded-md border border-white/[0.06] bg-white/[0.02]" />
-              <span className="h-7 rounded-md border border-white/[0.06] bg-white/[0.02]" />
-            </div>
-          </div>
-
-          <div className="mt-8 rounded-xl border border-[#ff6900]/30 bg-[#ff6900]/[0.06] p-3 transition-colors duration-300 hover:bg-[#ff6900]/[0.09]">
-            <div className="flex items-center justify-between">
-              <span className="text-[8px] font-medium text-white/65">
-                AI Try-On
-              </span>
-
-              <span className="text-[#ff6900]">
-                <ArrowIcon />
-              </span>
-            </div>
-
-            <p className="mt-2 text-[7px] leading-[1.5] text-white/25">
-              See this product on a model
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+const installSteps = [
+  "Connecting to store...",
+  "Registering webhooks...",
+  "Injecting try-on button...",
+  "Syncing product catalog...",
+];
 
 export default function PluginsSection() {
+  const [platform, setPlatform] = useState(platforms[0]);
+  const [step, setStep] = useState(-1);
+
+  const installing = step >= 0 && step < 4;
+  const installed = step === 4;
+
+  useEffect(() => {
+    if (step < 0 || step >= 4) return;
+    const t = setTimeout(() => setStep(step + 1), 750);
+    return () => clearTimeout(t);
+  }, [step]);
+
+  const install = () => {
+    if (installing || installed) return;
+    setStep(0);
+  };
+
+  const switchPlatform = (p: (typeof platforms)[number]) => {
+    setPlatform(p);
+    setStep(-1);
+  };
+
+  const progress = installed ? 100 : installing ? ((step + 1) / 4) * 100 : 0;
+
   return (
-    <section id="plugins" className="zahi-section">
-      <div className="relative overflow-hidden">
-        <div className="zahi-glow right-[-280px] top-[0%] h-[540px] w-[540px] opacity-30" />
+    <section className="zahi-section" id="plugins">
+      <div className="zahi-content zahi-section-inner">
+        <div className="zahi-eyebrow mb-8">Native plugins</div>
 
-        <div className="zahi-container relative py-[112px] sm:py-[128px]">
-          <div className="grid gap-12 lg:grid-cols-[0.68fr_1.32fr] lg:items-start lg:gap-16 xl:gap-24">
-            <div className="lg:sticky lg:top-32">
-              <div className="zahi-label">Store integrations</div>
+        <div className="grid gap-16 lg:grid-cols-2 lg:items-start">
+          {/* Left */}
+          <div>
+            <h2 className="zahi-heading text-[40px] lg:text-[56px]">
+              Install once,
+              <br />
+              <span className="zahi-blue">sell everywhere.</span>
+            </h2>
 
-              <h2 className="mt-7 max-w-[480px] text-[43px] font-medium leading-[0.94] tracking-[-0.055em] sm:text-[56px] lg:text-[58px]">
-                Bring try-on
-                <br />
-                into the store.
-              </h2>
+            <p className="zahi-body mt-8 max-w-[440px] text-[16px]">
+              No theme edits, no code paste. One click in your store admin
+              and the try-on button goes live on every product page.
+            </p>
 
-              <p className="mt-7 max-w-[410px] text-[14px] leading-[1.75] text-[var(--zahi-text-soft)]">
-                Connect your existing commerce platform and give shoppers an
-                AI-powered way to experience your products.
-              </p>
-
-              <Link
-                href="#widget"
-                className="group mt-9 inline-flex items-center gap-3 border-t border-white/10 pt-5 text-[10px] font-medium uppercase tracking-[0.1em] text-white/50 transition-colors hover:text-white"
-              >
-                See storefront experience
-
-                <span className="transition-transform duration-300 group-hover:translate-x-1">
-                  <ArrowIcon />
-                </span>
-              </Link>
+            {/* Platform tabs with real logos */}
+            <div className="mt-10 flex gap-3">
+              {platforms.map((p) => (
+                <button
+                  key={p.name}
+                  onClick={() => switchPlatform(p)}
+                  className="flex items-center gap-2.5"
+                  style={{
+                    padding: "11px 18px",
+                    borderRadius: 9999,
+                    fontSize: 11,
+                    fontWeight: 600,
+                    whiteSpace: "nowrap",
+                    border: `1px solid ${platform.name === p.name ? "#111315" : "#D5E6ED"}`,
+                    background: platform.name === p.name ? "#111315" : "#ffffff",
+                    color: platform.name === p.name ? "#ffffff" : "#46535A",
+                    transition: "all 250ms ease",
+                  }}
+                >
+                 {p.icon}
+                  {p.name}
+                </button>
+              ))}
             </div>
 
-            <div>
-              <StorePreview />
-
-              <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                {integrations.map((integration, index) => (
-                  <article
-                    key={integration.name}
-                    className={`zahi-card group relative overflow-hidden p-6 sm:p-7 ${
-                      index === 0
-                        ? "border-[#ff6900]/25"
-                        : "border-white/[0.08]"
-                    }`}
-                  >
-                    <div className="pointer-events-none absolute right-[-70px] top-[-70px] h-[180px] w-[180px] rounded-full bg-[radial-gradient(circle,rgba(255,105,0,0.1),transparent_70%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-
-                    <div className="relative flex items-start justify-between gap-4">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-white/[0.08] bg-white shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
-                        <img
-                          src={integration.logo}
-                          alt={`${integration.name} logo`}
-                          className="h-8 w-8"
-                        />
-                      </div>
-
-                      <span className="rounded-full border border-white/[0.08] px-2.5 py-1 text-[7px] font-medium uppercase tracking-[0.1em] text-white/25">
-                        {integration.status}
-                      </span>
-                    </div>
-
-                    <h3 className="relative mt-7 text-[21px] font-medium tracking-[-0.03em]">
-                      {integration.name}
-                    </h3>
-
-                    <p className="relative mt-3 max-w-[290px] text-[12px] leading-[1.7] text-[var(--zahi-text-muted)]">
-                      {integration.description}
-                    </p>
-
-                    <div className="relative mt-7 flex items-center gap-2 text-[9px] font-medium uppercase tracking-[0.1em] text-white/35 transition-colors group-hover:text-[var(--zahi-orange)]">
-                      Explore integration
-
-                      <span className="transition-transform duration-300 group-hover:translate-x-1">
-                        <ArrowIcon />
-                      </span>
-                    </div>
-                  </article>
-                ))}
+            {/* Admin mock */}
+            <div className="zahi-panel-raised mt-8 overflow-hidden">
+              <div className="flex items-center justify-between border-b border-[#E2EEF3] px-6 py-4">
+                <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.12em", color: "#718087" }}>
+                  {platform.name.toUpperCase()} ADMIN
+                </span>
+                <span className="zahi-status">
+                  <span className="zahi-status-dot" />
+                  Connected store
+                </span>
               </div>
 
-              <div className="mt-4 flex items-center justify-between border-t border-white/[0.06] pt-4">
-                <span className="text-[8px] font-medium uppercase tracking-[0.13em] text-white/20">
-                  Built for commerce
+              <div className="flex items-center gap-4 p-6">
+                <span
+                  className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[14px] bg-[#111315]"
+                  style={{ color: "#ffffff", fontSize: 14, fontWeight: 700 }}
+                >
+                  z.
                 </span>
+                <div className="min-w-0 flex-1">
+                  <p style={{ fontSize: 13, fontWeight: 600, color: "#111315" }}>zahi Try-On</p>
+                  <p style={{ fontSize: 10, color: "#718087" }}>★★★★★ · 214 reviews · by zahi</p>
+                </div>
+                <button
+                  onClick={install}
+                  className="shrink-0 rounded-full"
+                  style={{
+                    padding: "11px 18px",
+                    fontSize: 11,
+                    fontWeight: 600,
+                    whiteSpace: "nowrap",
+                    background: installed ? "#4DA878" : "#111315",
+                    color: "#ffffff",
+                    transition: "background 300ms ease",
+                  }}
+                >
+                  {installed ? "Connected" : installing ? "Installing..." : "Install"}
+                </button>
+              </div>
 
-                <span className="flex items-center gap-2 text-[8px] uppercase tracking-[0.1em] text-white/20">
-                  Store
-                  <span className="h-px w-5 bg-white/10" />
-                  API
+              {/* Real install progress */}
+              {(installing || installed) && (
+                <div className="border-t border-[#E2EEF3] px-6 py-5">
+                  <div className="h-1 w-full overflow-hidden rounded-full bg-[#E2EEF3]">
+                    <div
+                      className="h-full rounded-full"
+                      style={{
+                        width: `${progress}%`,
+                        background: installed ? "#4DA878" : "#28769D",
+                        transition: "width 700ms ease, background 300ms ease",
+                      }}
+                    />
+                  </div>
+                  <p className="zahi-small mt-3">
+                    {installed ? "Plugin active · try-on button live on all products" : installSteps[step]}
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Right: store preview */}
+          <div>
+            <div className="zahi-product-shell relative overflow-hidden">
+              <div className="zahi-product-header">
+                <span className="rounded-full bg-[#F2F9FC] px-4 py-1.5 text-[10px] text-[#718087]">
+                  yourstore.com
                 </span>
+                <span className="zahi-status">
+                  <span
+                    className={`zahi-status-dot ${installed ? "" : "opacity-30"}`}
+                    style={{ background: installed ? "#4DA878" : undefined }}
+                  />
+                  {installed ? "Widget live" : installing ? installSteps[step] : "Widget off"}
+                </span>
+              </div>
+
+              <div className="grid gap-6 bg-white p-8 sm:grid-cols-2">
+                <div className="overflow-hidden rounded-[16px] bg-[#F2F9FC]">
+                  <img src="/hero/garment.png" alt="Product" className="aspect-[3/4] w-full object-cover" />
+                </div>
+                <div className="flex flex-col">
+                  <p className="zahi-overline">Home / Tees</p>
+                  <p className="zahi-heading mt-2 text-[20px]">Racing Graphic Tee</p>
+                  <p className="zahi-display mt-3 text-[22px]">PKR 4,900</p>
+                  <div className="mt-5">
+                    <span className="zahi-button-primary w-full">Add to cart</span>
+                  </div>
+
+                  {/* Try-on button slides in below product card */}
+                  <div className="mt-3">
+                    {installed ? (
+                      <button
+                        className="flex w-full items-center justify-center gap-2 rounded-full"
+                        style={{
+                          padding: "13px 18px",
+                          fontSize: 11,
+                          fontWeight: 600,
+                          background: "#28769D",
+                          color: "#ffffff",
+                          animation: "zahi-pop 500ms ease both",
+                        }}
+                      >
+                        <span
+                          className="flex h-[18px] w-[18px] items-center justify-center rounded-full bg-white"
+                          style={{ color: "#28769D", fontSize: 9, fontWeight: 700 }}
+                        >
+                          z.
+                        </span>
+                        Try it on
+                      </button>
+                    ) : (
+                      <span
+                        className="flex w-full items-center justify-center rounded-full border border-dashed border-[#C4DBE5] px-5"
+                        style={{ padding: "13px 18px", fontSize: 10, color: "#9BAAB1" }}
+                      >
+                        widget appears here after install
+                      </span>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
+
+            <p className="zahi-small mt-4 text-center">
+              {installed
+                ? "Plugin live · shoppers see the try-on button"
+                : "Click Install to see the widget go live"}
+            </p>
           </div>
         </div>
       </div>
+
+      <style>{`
+        @keyframes zahi-pop {
+          0% { opacity: 0; transform: translateY(10px) scale(0.94); }
+          60% { transform: translateY(-2px) scale(1.02); }
+          100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+      `}</style>
     </section>
   );
 }

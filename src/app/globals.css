@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap");
 @import "tailwindcss";
 
 :root {
@@ -615,85 +616,60 @@ svg {
 }
 
 /* =========================================================
-   TERMINAL / API
+   TERMINAL / API (dark)
    ========================================================= */
-
 .zahi-terminal {
   overflow: hidden;
-
-  border: 1px solid #cbdfe7;
-
+  border: 1px solid #1c2b34;
   border-radius: var(--zahi-radius-lg);
-
-  background: #ffffff;
-
+  background: #0d151a;
   box-shadow: var(--zahi-shadow-md);
 }
 
 .zahi-terminal-bar {
   display: flex;
-
   align-items: center;
   justify-content: space-between;
-
   min-height: 46px;
-
   padding-inline: 16px;
-
-  border-bottom: 1px solid var(--zahi-border-soft);
-
-  background: #f7fbfd;
+  border-bottom: 1px solid #1c2b34;
+  background: #111d24;
 }
 
 .zahi-terminal-dots {
   display: flex;
-
   align-items: center;
-
   gap: 6px;
 }
 
 .zahi-terminal-dots span {
   display: block;
-
   width: 6px;
   height: 6px;
-
   border-radius: 9999px;
-
-  background: #b8c9d0;
+  background: #33505d;
 }
 
 .zahi-terminal-code {
   overflow-x: auto;
-
   padding: 22px;
-
-  color: #53636b;
-
-  font-family:
-    "SFMono-Regular",
-    "SF Mono",
-    Consolas,
-    "Liberation Mono",
-    monospace;
-
+  color: #a7c2ce;
+  font-family: "JetBrains Mono", "SF Mono", Consolas, monospace;
   font-size: 11px;
   line-height: 1.8;
-
   scrollbar-width: thin;
 }
 
 .zahi-code-blue {
-  color: var(--zahi-blue-dark);
+  color: #6fb6dd;
 }
 
 .zahi-code-black {
-  color: #111315;
+  color: #eaf4f9;
 }
 
 .zahi-code-muted {
-  color: #9aa9b0;
+  color: #52707e;
 }
 
 /* =========================================================
@@ -848,4 +824,57 @@ svg {
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* =========================================================
+   MOTION
+   ========================================================= */
+@keyframes zahi-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.zahi-term-line {
+  display: block;
+  animation: zahi-fade-up 0.45s ease both;
+}
+
+@keyframes zahi-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.zahi-cursor::after {
+  content: "▍";
+  color: #6fb6dd;
+  animation: zahi-blink 1s step-end infinite;
+}
+
+@keyframes zahi-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+.zahi-float {
+  animation: zahi-float 7s ease-in-out infinite;
+}
+
+.zahi-float-slow {
+  animation: zahi-float 10s ease-in-out infinite;
 }
