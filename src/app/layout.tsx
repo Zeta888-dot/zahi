@@ -6,12 +6,14 @@ import "./globals.css";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
   title: "zahi. | AI Virtual Try-On",
   description:
     "AI-powered virtual try-on for fashion commerce. Turn your product catalog into realistic try-on experiences.",
+  metadataBase: new URL("https://zahi.pk"),
   openGraph: {
     title: "zahi. | AI Virtual Try-On",
     description:
@@ -35,11 +37,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${inter.variable} bg-[#050505] text-[#f5f5f2] antialiased`}
-      >
+      <body className={`${inter.variable} antialiased`}>
         <Navbar />
-        {children}
+
+        <div className="relative min-h-screen overflow-x-clip">
+          {children}
+        </div>
       </body>
     </html>
   );

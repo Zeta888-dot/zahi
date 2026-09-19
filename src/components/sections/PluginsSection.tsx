@@ -5,7 +5,6 @@ type Integration = {
   description: string;
   status: string;
   logo: string;
-  logoClassName: string;
 };
 
 const integrations: Integration[] = [
@@ -15,7 +14,6 @@ const integrations: Integration[] = [
       "Bring virtual try-on directly into your Shopify product experience.",
     status: "Integration",
     logo: "https://cdn.simpleicons.org/shopify",
-    logoClassName: "h-8 w-8",
   },
   {
     name: "WooCommerce",
@@ -23,7 +21,6 @@ const integrations: Integration[] = [
       "Connect your WooCommerce catalog with a dedicated try-on workflow.",
     status: "Integration",
     logo: "https://cdn.simpleicons.org/woocommerce",
-    logoClassName: "h-8 w-8",
   },
 ];
 
@@ -48,40 +45,43 @@ function ArrowIcon() {
 
 function StorePreview() {
   return (
-    <div className="relative overflow-hidden rounded-[20px] border border-white/[0.09] bg-[#0b0b0b]">
-      <div className="flex h-11 items-center justify-between border-b border-white/[0.07] px-4">
+    <div className="relative overflow-hidden rounded-[22px] border border-white/[0.09] bg-[#0a0a0a] shadow-[0_30px_90px_rgba(0,0,0,0.3)]">
+      <div className="flex h-11 items-center justify-between border-b border-white/[0.07] px-4 sm:px-5">
         <div className="flex items-center gap-1.5">
           <span className="h-2 w-2 rounded-full bg-[#ff5f57]" />
           <span className="h-2 w-2 rounded-full bg-[#febc2e]" />
           <span className="h-2 w-2 rounded-full bg-[#28c840]" />
         </div>
 
-        <span className="text-[8px] uppercase tracking-[0.12em] text-white/20">
+        <span className="text-[8px] font-medium uppercase tracking-[0.14em] text-white/20">
           your-store.com
         </span>
 
         <span className="h-5 w-5 rounded-md border border-white/[0.07]" />
       </div>
 
-      <div className="grid gap-4 p-4 sm:grid-cols-[1fr_0.8fr] sm:p-5">
-        <div className="relative flex min-h-[220px] items-center justify-center overflow-hidden rounded-xl border border-white/[0.06] bg-[#141414]">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(255,105,0,0.12),transparent_60%)]" />
+      <div className="grid gap-4 p-4 sm:grid-cols-[1fr_0.82fr] sm:p-5">
+        <div className="relative flex min-h-[220px] items-center justify-center overflow-hidden rounded-xl border border-white/[0.06] bg-[#141414] sm:min-h-[235px]">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(255,105,0,0.14),transparent_62%)]" />
 
           <div className="relative h-[145px] w-[100px]">
-            <div className="absolute left-[24px] top-0 h-[40px] w-[52px] rounded-[16px_16px_7px_7px] bg-[linear-gradient(145deg,#c9946b,#71472f)]" />
+            <div className="absolute left-[24px] top-0 h-[40px] w-[52px] rounded-[16px_16px_7px_7px] bg-[linear-gradient(145deg,#d19a6d,#70452e)]" />
 
-            <div className="absolute left-[12px] top-[31px] h-[98px] w-[76px] rounded-[10px_10px_17px_17px] bg-[linear-gradient(145deg,#bb8055,#70462f_70%,#402a20)]" />
+            <div className="absolute left-[12px] top-[31px] h-[98px] w-[76px] rounded-[10px_10px_17px_17px] bg-[linear-gradient(145deg,#bd8358,#70462f_70%,#402a20)]" />
 
             <div className="absolute left-[49px] top-[35px] h-[86px] w-px bg-black/25" />
 
-            <div className="absolute left-[13px] top-[37px] h-[74px] w-[13px] -rotate-[8deg] rounded-full bg-[#84583f]" />
+            <div className="absolute left-[13px] top-[37px] h-[74px] w-[13px] -rotate-[8deg] rounded-full bg-[linear-gradient(#bd8058,#62402e)]" />
 
-            <div className="absolute right-[13px] top-[37px] h-[74px] w-[13px] rotate-[8deg] rounded-full bg-[#84583f]" />
+            <div className="absolute right-[13px] top-[37px] h-[74px] w-[13px] rotate-[8deg] rounded-full bg-[linear-gradient(#bd8058,#62402e)]" />
           </div>
 
-          <span className="absolute bottom-3 left-3 text-[7px] uppercase tracking-[0.1em] text-white/20">
-            Product / blazer
-          </span>
+          <div className="absolute bottom-3 left-3">
+            <p className="text-[7px] font-medium uppercase tracking-[0.1em] text-white/20">
+              Product
+            </p>
+            <p className="mt-1 text-[8px] text-white/35">Blazer / Brown</p>
+          </div>
         </div>
 
         <div className="flex flex-col justify-between">
@@ -98,7 +98,7 @@ function StorePreview() {
             </div>
           </div>
 
-          <div className="mt-8 rounded-xl border border-[#ff6900]/30 bg-[#ff6900]/[0.07] p-3">
+          <div className="mt-8 rounded-xl border border-[#ff6900]/30 bg-[#ff6900]/[0.06] p-3 transition-colors duration-300 hover:bg-[#ff6900]/[0.09]">
             <div className="flex items-center justify-between">
               <span className="text-[8px] font-medium text-white/65">
                 AI Try-On
@@ -123,30 +123,33 @@ export default function PluginsSection() {
   return (
     <section id="plugins" className="zahi-section">
       <div className="relative overflow-hidden">
-        <div className="zahi-glow right-[-260px] top-[5%] h-[500px] w-[500px] opacity-40" />
+        <div className="zahi-glow right-[-280px] top-[0%] h-[540px] w-[540px] opacity-30" />
 
-        <div className="zahi-container zahi-section-inner relative">
-          <div className="grid gap-14 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
-            <div>
+        <div className="zahi-container relative py-[112px] sm:py-[128px]">
+          <div className="grid gap-12 lg:grid-cols-[0.68fr_1.32fr] lg:items-start lg:gap-16 xl:gap-24">
+            <div className="lg:sticky lg:top-32">
               <div className="zahi-label">Store integrations</div>
 
-              <h2 className="mt-7 max-w-[500px] text-[43px] font-medium leading-[0.95] tracking-[-0.05em] sm:text-[57px]">
+              <h2 className="mt-7 max-w-[480px] text-[43px] font-medium leading-[0.94] tracking-[-0.055em] sm:text-[56px] lg:text-[58px]">
                 Bring try-on
                 <br />
                 into the store.
               </h2>
 
-              <p className="mt-7 max-w-[410px] text-[14px] leading-[1.7] text-[var(--zahi-text-soft)]">
+              <p className="mt-7 max-w-[410px] text-[14px] leading-[1.75] text-[var(--zahi-text-soft)]">
                 Connect your existing commerce platform and give shoppers an
                 AI-powered way to experience your products.
               </p>
 
               <Link
                 href="#widget"
-                className="mt-8 inline-flex items-center gap-3 border-t border-white/10 pt-5 text-[10px] font-medium uppercase tracking-[0.1em] text-white/55 transition-colors hover:text-white"
+                className="group mt-9 inline-flex items-center gap-3 border-t border-white/10 pt-5 text-[10px] font-medium uppercase tracking-[0.1em] text-white/50 transition-colors hover:text-white"
               >
                 See storefront experience
-                <ArrowIcon />
+
+                <span className="transition-transform duration-300 group-hover:translate-x-1">
+                  <ArrowIcon />
+                </span>
               </Link>
             </div>
 
@@ -154,39 +157,60 @@ export default function PluginsSection() {
               <StorePreview />
 
               <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                {integrations.map((integration) => (
+                {integrations.map((integration, index) => (
                   <article
                     key={integration.name}
-                    className="zahi-card group p-6"
+                    className={`zahi-card group relative overflow-hidden p-6 sm:p-7 ${
+                      index === 0
+                        ? "border-[#ff6900]/25"
+                        : "border-white/[0.08]"
+                    }`}
                   >
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white">
+                    <div className="pointer-events-none absolute right-[-70px] top-[-70px] h-[180px] w-[180px] rounded-full bg-[radial-gradient(circle,rgba(255,105,0,0.1),transparent_70%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+
+                    <div className="relative flex items-start justify-between gap-4">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-white/[0.08] bg-white shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
                         <img
                           src={integration.logo}
                           alt={`${integration.name} logo`}
-                          className={integration.logoClassName}
+                          className="h-8 w-8"
                         />
                       </div>
 
-                      <span className="rounded-full border border-white/[0.08] px-2.5 py-1 text-[7px] uppercase tracking-[0.08em] text-white/25">
+                      <span className="rounded-full border border-white/[0.08] px-2.5 py-1 text-[7px] font-medium uppercase tracking-[0.1em] text-white/25">
                         {integration.status}
                       </span>
                     </div>
 
-                    <h3 className="mt-7 text-[21px] font-medium tracking-[-0.025em]">
+                    <h3 className="relative mt-7 text-[21px] font-medium tracking-[-0.03em]">
                       {integration.name}
                     </h3>
 
-                    <p className="mt-3 max-w-[280px] text-[12px] leading-[1.65] text-[var(--zahi-text-muted)]">
+                    <p className="relative mt-3 max-w-[290px] text-[12px] leading-[1.7] text-[var(--zahi-text-muted)]">
                       {integration.description}
                     </p>
 
-                    <div className="mt-6 flex items-center gap-2 text-[9px] uppercase tracking-[0.1em] text-white/35 transition-colors group-hover:text-[var(--zahi-orange)]">
+                    <div className="relative mt-7 flex items-center gap-2 text-[9px] font-medium uppercase tracking-[0.1em] text-white/35 transition-colors group-hover:text-[var(--zahi-orange)]">
                       Explore integration
-                      <ArrowIcon />
+
+                      <span className="transition-transform duration-300 group-hover:translate-x-1">
+                        <ArrowIcon />
+                      </span>
                     </div>
                   </article>
                 ))}
+              </div>
+
+              <div className="mt-4 flex items-center justify-between border-t border-white/[0.06] pt-4">
+                <span className="text-[8px] font-medium uppercase tracking-[0.13em] text-white/20">
+                  Built for commerce
+                </span>
+
+                <span className="flex items-center gap-2 text-[8px] uppercase tracking-[0.1em] text-white/20">
+                  Store
+                  <span className="h-px w-5 bg-white/10" />
+                  API
+                </span>
               </div>
             </div>
           </div>
