@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -33,16 +34,45 @@ export default function HeroSection() {
           0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
           50% { transform: translate3d(45px, -35px, 0) scale(1.06); }
         }
+        @keyframes zahi-gradient-shift {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
         @media (prefers-reduced-motion: reduce) {
           .zahi-aurora { animation: none !important; }
+          .zahi-gradient-bg { animation: none !important; }
+        }
+        .zahi-button-primary {
+          @apply bg-white text-zahi-blue border border-zahi-blue/20 rounded-lg px-6 py-3 font-medium flex items-center gap-2 transition-all duration-300 hover:bg-zahi-blue/5 hover:text-zahi-blue hover:border-zahi-blue/40 shadow-sm hover:shadow-md hover:-translate-y-[2px];
+        }
+        .zahi-button-secondary {
+          @apply bg-transparent text-zahi-blue/80 border border-zahi-blue/20 rounded-lg px-6 py-3 font-medium transition-all duration-300 hover:bg-zahi-blue/5 hover:text-zahi-blue hover:border-zahi-blue/40 hover:-translate-y-[2px];
+        }
+        .zahi-button-primary .icon-transition {
+          @apply transition-transform duration-300;
+        }
+        .zahi-button-primary:hover .icon-transition {
+          @apply translate-x-0.5;
         }
       `}</style>
 
-      {/* Background system, fades out at the bottom so it blends into the next section */}
+      {/* Background system with animated gradient overlay */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 -z-10 overflow-hidden [mask-image:linear-gradient(to_bottom,black_65%,transparent_100%)]"
       >
+        {/* Animated gradient overlay */}
+        <div
+          className="absolute inset-0 zahi-gradient-bg"
+          style={{
+            background:
+              "linear-gradient(-45deg, rgba(59,130,246,0.15), rgba(139,92,246,0.15), rgba(251,146,120,0.15), rgba(59,130,246,0.15))",
+            backgroundSize: "400% 400%",
+            animation: "zahi-gradient-shift 12s ease infinite",
+          }}
+        />
+
         {/* Blue core, top center */}
         <div className="absolute top-[-12%] left-1/2 -translate-x-1/2">
           <div
@@ -80,7 +110,7 @@ export default function HeroSection() {
       <div className="zahi-content relative w-full pt-32 pb-28 lg:pt-40 lg:pb-32">
         <div className="mx-auto flex max-w-[1040px] flex-col items-center text-center">
           <h1
-            className={`zahi-display text-[48px] leading-[1] tracking-[-0.04em] sm:text-[72px] lg:text-[108px] ${reveal(
+            className={`zahi-display text-[48px] leading-[1] tracking-[-0.04em] font-[800] sm:text-[72px] lg:text-[108px] ${reveal(
               "delay-100"
             )}`}
           >
@@ -89,13 +119,11 @@ export default function HeroSection() {
           </h1>
 
           <p
-            className={`zahi-body mx-auto mt-8 max-w-[540px] text-[16px] leading-[1.7] lg:mt-10 lg:text-[19px] ${reveal(
+            className={`zahi-body mx-auto mt-8 max-w-[540px] text-[16px] leading-[1.7] font-[400] lg:mt-10 lg:text-[19px] ${reveal(
               "delay-300"
             )}`}
           >
-            Generate photorealistic try-ons in 8 seconds. One product photo,
-            forty models, infinite customers.
-          </p>
+            Generate photorealistic try‑ons in 8 seconds. One product photo, forty models, infinite customers. </p>
 
           <div
             className={`mt-12 flex flex-wrap items-center justify-center gap-4 lg:mt-14 ${reveal(
@@ -109,7 +137,7 @@ export default function HeroSection() {
                 height="13"
                 viewBox="0 0 14 14"
                 fill="none"
-                className="transition-transform duration-300 group-hover:translate-x-0.5"
+                className="icon-transition"
                 aria-hidden
               >
                 <path
