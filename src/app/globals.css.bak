@@ -136,7 +136,6 @@ a {
   text-decoration: none;
 }
 
-@layer base {
 button,
 input,
 textarea,
@@ -153,7 +152,6 @@ button {
 
 button:disabled {
   cursor: not-allowed;
-}
 }
 
 img {

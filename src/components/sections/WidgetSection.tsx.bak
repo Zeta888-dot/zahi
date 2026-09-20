@@ -59,7 +59,7 @@ const stageCopy: Record<Stage, { title: string; sub: string }> = {
 /*
   Buttons get their size, padding and font from inline styles on purpose.
   The global button reset in globals.css is outside any cascade layer, so it
-  beats Tailwind padding, margin and font-size utilities on button elements.
+  beats Tailwind padding, margin and font-size utilities on <button>.
 */
 const btnBase: CSSProperties = {
   display: "inline-flex",
@@ -108,11 +108,6 @@ const btnIcon: CSSProperties = {
   gap: 0,
 };
 
-const btnAction: CSSProperties = {
-  ...btnBase,
-  height: 44,
-};
-
 function useInView<T extends HTMLElement>() {
   const ref = useRef<T>(null);
   const [inView, setInView] = useState(false);
@@ -158,7 +153,7 @@ function StatusPill({
   );
 }
 
-function CodeAttr({ name, value }: { name: string; value: string }) {
+function Attr({ name, value }: { name: string; value: string }) {
   return (
     <>
       {"  "}
@@ -268,15 +263,6 @@ export default function WidgetSection() {
     setStage("upload");
   };
 
-  const downloadResult = () => {
-    const link = document.createElement("a");
-    link.href = RESULT_PHOTO;
-    link.download = "zahi-try-on.png";
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-  };
-
   const onFile = (e: ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0];
     if (!f) return;
@@ -324,63 +310,6 @@ export default function WidgetSection() {
 
   const boxCls =
     "relative mt-4 block h-56 w-full overflow-hidden rounded-[16px] bg-[#F8FCFE]";
-
-  /* Action area of the widget window, one block per stage */
-  let actionArea = null;
-
-  if (stage === "upload") {
-    actionArea = (
-      <button
-        type="button"
-        onClick={startGenerate}
-        style={{
-          ...btnBlock,
-          height: 44,
-          backgroundColor: accent,
-          boxShadow: `0 12px 26px -12px ${accent}`,
-        }}
-        className="text-white transition-transform duration-300 hover:-translate-y-0.5"
-      >
-        Generate try-on
-      </button>
-    );
-  } else if (stage === "generating") {
-    actionArea = (
-      <div className="flex h-11 items-center">
-        <div className="h-1 w-full overflow-hidden rounded-full bg-[#E2EEF3]">
-          <div
-            className="h-full rounded-full"
-            style={{
-              width: `${prog}%`,
-              transition: "width 1.5s linear",
-              backgroundColor: accent,
-            }}
-          />
-        </div>
-      </div>
-    );
-  } else {
-    actionArea = (
-      <div className="grid h-11 grid-cols-2 gap-2.5">
-        <button
-          type="button"
-          onClick={downloadResult}
-          style={btnAction}
-          className="bg-[#111315] text-white transition-colors duration-300 hover:bg-[#28769D]"
-        >
-          Download
-        </button>
-        <button
-          type="button"
-          onClick={startOver}
-          style={btnAction}
-          className="bg-white text-[#46535A] ring-1 ring-[#D5E6ED] transition-all duration-200 hover:text-[#111315] hover:ring-[#111315]"
-        >
-          Start over
-        </button>
-      </div>
-    );
-  }
 
   return (
     <section id="widget" className="zahi-section relative isolate scroll-mt-20 overflow-hidden">
@@ -556,10 +485,10 @@ export default function WidgetSection() {
                         <span className="text-[#7C8B93]">{"<"}</span>
                         <span className="text-[#7FB8D6]">script</span>
                         {"\n"}
-                        <CodeAttr name="src" value="https://cdn.zahi.pk/widget.js" />
-                        <CodeAttr name="data-store" value="yourstore" />
-                        <CodeAttr name="data-accent" value={accent} />
-                        <CodeAttr name="data-position" value={positionValue} />
+                        <Attr name="src" value="https://cdn.zahi.pk/widget.js" />
+                        <Attr name="data-store" value="yourstore" />
+                        <Attr name="data-accent" value={accent} />
+                        <Attr name="data-position" value={positionValue} />
                         {"  "}
                         <span className="text-[#9CCFB0]">async</span>
                         {"\n"}
@@ -769,23 +698,27 @@ export default function WidgetSection() {
                           Change photo
                         </span>
                       </button>
-                    ) : stage === "generating" ? (
-                      <div className={boxCls}>
-                        <img src={photo} alt="" className="h-full w-full object-contain opacity-70" />
-                        <div
-                          aria-hidden
-                          className="zahi-scan-anim absolute inset-x-0 h-16"
-                          style={{
-                            background: `linear-gradient(to bottom, transparent, ${accent}40, transparent)`,
-                          }}
-                        />
-                      </div>
                     ) : (
                       <div className={boxCls}>
-                        <img src={RESULT_PHOTO} alt="Try-on result" className="h-full w-full object-contain" />
-                        <span className="absolute top-3 left-3 rounded-full bg-[#111315]/85 px-2.5 py-1 text-[10px] font-semibold tracking-[0.1em] text-white">
-                          READY IN 8s
-                        </span>
+                        {stage === "generating" ? (
+                          <>
+                            <img src={photo} alt="" className="h-full w-full object-contain opacity-70" />
+                            <div
+                              aria-hidden
+                              className="zahi-scan-anim absolute inset-x-0 h-16"
+                              style={{
+                                background: `linear-gradient(to bottom, transparent, ${accent}40, transparent)`,
+                              }}
+                            />
+                          </>
+                        ) : (
+                          <>
+                            <img src={RESULT_PHOTO} alt="Try-on result" className="h-full w-full object-contain" />
+                            <span className="absolute top-3 left-3 rounded-full bg-[#111315]/85 px-2.5 py-1 text-[10px] font-semibold tracking-[0.1em] text-white">
+                              READY IN 8s
+                            </span>
+                          </>
+                        )}
                       </div>
                     )}
 
@@ -797,7 +730,59 @@ export default function WidgetSection() {
                       onChange={onFile}
                     />
 
-                    <div className="mt-5 h-11">{actionArea}</div>
+                    <div className="mt-5 h-11">
+                      {stage === "upload" && (
+                        <button
+                          type="button"
+                          onClick={startGenerate}
+                          style={{
+                            ...btnBlock,
+                            height: 44,
+                            backgroundColor: accent,
+                            boxShadow: `0 12px 26px -12px ${accent}`,
+                          }}
+                          className="text-white transition-transform duration-300 hover:-translate-y-0.5"
+                        >
+                          Generate try-on
+                        </button>
+                      )}
+
+                      {stage === "generating" && (
+                        <div className="flex h-11 items-center">
+                          <div className="h-1 w-full overflow-hidden rounded-full bg-[#E2EEF3]">
+                            <div
+                              className="h-full rounded-full"
+                              style={{
+                                width: `${prog}%`,
+                                transition: "width 1.5s linear",
+                                backgroundColor: accent,
+                              }}
+                            />
+                          </div>
+                        </div>
+                      )}
+
+                      {stage === "result" && (
+                        <div className="flex h-11 gap-2.5">
+                          
+                            href={RESULT_PHOTO}
+                            download="zahi-try-on.png"
+                            style={{ ...btnBase, flex: 1, height: 44 }}
+                            className="bg-[#111315] text-white transition-colors duration-300 hover:bg-[#28769D]"
+                          >
+                            Download
+                          </a>
+                          <button
+                            type="button"
+                            onClick={startOver}
+                            style={{ ...btnBase, flex: 1, height: 44 }}
+                            className="bg-white text-[#46535A] ring-1 ring-[#D5E6ED] transition-all duration-200 hover:text-[#111315] hover:ring-[#111315]"
+                          >
+                            Start over
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
 
                   <p className="shrink-0 border-t border-[#E2EEF3] px-5 py-3 text-center text-[11px] text-[#9BAAB1]">

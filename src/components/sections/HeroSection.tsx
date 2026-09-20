@@ -1,114 +1,141 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+const NOISE =
+  "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>\")";
 
 export default function HeroSection() {
-  const [position, setPosition] = useState(50);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
+
+  const reveal = (delay: string) =>
+    `transition-all duration-1000 ease-out motion-reduce:transition-none ${delay} ${
+      mounted ? "translate-y-0 opacity-100 blur-0" : "translate-y-5 opacity-0 blur-[6px]"
+    }`;
 
   return (
-    <section className="zahi-section relative overflow-hidden">
-      <div className="zahi-glow absolute top-20 right-0" />
-      <div className="zahi-glow-small absolute top-40 left-10" />
+    <section className="zahi-section relative isolate flex min-h-[100svh] items-center justify-center overflow-hidden">
+      <style>{`
+        @keyframes zahi-drift-a {
+          0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+          50% { transform: translate3d(40px, 30px, 0) scale(1.08); }
+        }
+        @keyframes zahi-drift-b {
+          0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+          50% { transform: translate3d(-50px, 40px, 0) scale(1.1); }
+        }
+        @keyframes zahi-drift-c {
+          0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+          50% { transform: translate3d(45px, -35px, 0) scale(1.06); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .zahi-aurora { animation: none !important; }
+        }
+      `}</style>
 
-      <div className="zahi-content relative pt-32 pb-20 lg:pt-40 lg:pb-32">
-        {/* Eyebrow */}
-        <div className="zahi-eyebrow mb-8">
-          AI Virtual Try-On for eCommerce
+      {/* Background system, fades out at the bottom so it blends into the next section */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10 overflow-hidden [mask-image:linear-gradient(to_bottom,black_65%,transparent_100%)]"
+      >
+        {/* Blue core, top center */}
+        <div className="absolute top-[-12%] left-1/2 -translate-x-1/2">
+          <div
+            className="zahi-aurora h-[560px] w-[860px] max-w-[150vw] rounded-full bg-[radial-gradient(closest-side,rgba(59,130,246,0.32),transparent)] blur-3xl"
+            style={{ animation: "zahi-drift-a 18s ease-in-out infinite" }}
+          />
         </div>
 
-        {/* Headline */}
-        <h1 className="zahi-display text-[56px] lg:text-[92px]">
-          Every garment,
-          <br />
-          <span className="zahi-blue">on every body.</span>
-        </h1>
-
-        <p className="zahi-body mt-8 max-w-[520px] text-[16px] lg:text-[18px]">
-          Generate photorealistic try-ons in 08 seconds. One product photo,
-          forty models, infinite customers.
-        </p>
-
-        {/* CTAs */}
-        <div className="mt-10 flex flex-wrap gap-4">
-          <a href="/try-on" className="zahi-button-primary">
-            Try it now
-            <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
-              <path d="M2.5 7H11.5M8 3.5L11.5 7L8 10.5" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </a>
-          <a href="#how-it-works" className="zahi-button-secondary">
-            See how it works
-          </a>
+        {/* Violet, right */}
+        <div className="absolute top-[8%] right-[-12%]">
+          <div
+            className="zahi-aurora h-[520px] w-[520px] rounded-full bg-[radial-gradient(closest-side,rgba(139,92,246,0.22),transparent)] blur-3xl"
+            style={{ animation: "zahi-drift-b 22s ease-in-out infinite" }}
+          />
         </div>
 
-        {/* Interactive Before/After */}
-        <div className="mt-20 grid gap-12 lg:grid-cols-2 lg:items-center">
-          <div className="zahi-product-shell relative aspect-[3/4] overflow-hidden">
-            {/* Before: model */}
-            <img
-              src="/hero/model.png"
-              alt="Model before try-on"
-              className="absolute inset-0 h-full w-full object-cover"
-            />
-            {/* After: try-on result */}
-            <div
-              className="absolute inset-0"
-              style={{ clipPath: `inset(0 0 0 ${position}%)` }}
-            >
-              <img
-                src="/hero/try-on-result.png"
-                alt="Model after try-on"
-                className="h-full w-full object-cover"
-              />
-            </div>
+        {/* Warm rose and peach, bottom left */}
+        <div className="absolute bottom-[-6%] left-[-10%]">
+          <div
+            className="zahi-aurora h-[480px] w-[480px] rounded-full bg-[radial-gradient(closest-side,rgba(251,146,120,0.2),transparent)] blur-3xl"
+            style={{ animation: "zahi-drift-c 26s ease-in-out infinite" }}
+          />
+        </div>
 
-            {/* Labels */}
-            <span className="absolute top-4 left-4 rounded-full bg-white/85 px-3 py-1.5 text-[9px] font-semibold tracking-[0.12em] text-[#46535A] backdrop-blur">
-              BEFORE
-            </span>
-            <span className="absolute top-4 right-4 rounded-full bg-[#111315]/85 px-3 py-1.5 text-[9px] font-semibold tracking-[0.12em] text-white backdrop-blur">
-              AFTER · 08s
-            </span>
+        {/* Fine grid */}
+        <div className="absolute inset-0 opacity-50 [background-image:linear-gradient(to_right,rgba(17,19,21,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(17,19,21,0.05)_1px,transparent_1px)] [background-size:80px_80px] [mask-image:radial-gradient(ellipse_at_center,black_15%,transparent_68%)]" />
 
-            {/* Slider handle */}
-            <div
-              className="pointer-events-none absolute top-0 bottom-0 w-[2px] bg-white shadow-[0_0_20px_rgba(0,0,0,0.25)]"
-              style={{ left: `${position}%` }}
-            >
-              <div className="absolute top-1/2 left-1/2 flex h-11 w-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow-[0_8px_25px_rgba(0,0,0,0.18)]">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                  <path d="M8 12H16M8 12L11 9M8 12L11 15M16 12L13 9M16 12L13 15" stroke="#111315" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </div>
-            </div>
+        {/* Grain, removes gradient banding and adds a printed feel */}
+        <div
+          className="absolute inset-0 opacity-[0.05] mix-blend-multiply"
+          style={{ backgroundImage: NOISE }}
+        />
+      </div>
 
-            <input
-              type="range"
-              min="0"
-              max="100"
-              value={position}
-              onChange={(e) => setPosition(Number(e.target.value))}
-              aria-label="Compare before and after"
-              className="absolute inset-0 z-10 h-full w-full cursor-ew-resize opacity-0"
-            />
+      <div className="zahi-content relative w-full pt-32 pb-28 lg:pt-40 lg:pb-32">
+        <div className="mx-auto flex max-w-[1040px] flex-col items-center text-center">
+          <h1
+            className={`zahi-display text-[48px] leading-[1] tracking-[-0.04em] sm:text-[72px] lg:text-[108px] ${reveal(
+              "delay-100"
+            )}`}
+          >
+            <span className="block">Every garment,</span>
+            <span className="zahi-blue block">on every body.</span>
+          </h1>
+
+          <p
+            className={`zahi-body mx-auto mt-8 max-w-[540px] text-[16px] leading-[1.7] lg:mt-10 lg:text-[19px] ${reveal(
+              "delay-300"
+            )}`}
+          >
+            Generate photorealistic try-ons in 8 seconds. One product photo,
+            forty models, infinite customers.
+          </p>
+
+          <div
+            className={`mt-12 flex flex-wrap items-center justify-center gap-4 lg:mt-14 ${reveal(
+              "delay-500"
+            )}`}
+          >
+            <a href="/try-on" className="zahi-button-primary group">
+              Try it now
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 14 14"
+                fill="none"
+                className="transition-transform duration-300 group-hover:translate-x-0.5"
+                aria-hidden
+              >
+                <path
+                  d="M2.5 7H11.5M8 3.5L11.5 7L8 10.5"
+                  stroke="currentColor"
+                  strokeWidth="1.25"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </a>
+            <a href="#how-it-works" className="zahi-button-secondary">
+              See how it works
+            </a>
           </div>
-
-          {/* Live stats */}
-          <div className="space-y-6">
-            <div className="zahi-panel-raised p-8">
-              <p className="zahi-display zahi-blue text-[48px]">08s</p>
-              <p className="zahi-body mt-2">Average generation time</p>
-            </div>
-            <div className="zahi-panel-raised p-8">
-              <p className="zahi-display zahi-blue text-[48px]">40+</p>
-              <p className="zahi-body mt-2">Base models in library</p>
-            </div>
-            <div className="zahi-panel-raised p-8">
-              <p className="zahi-display zahi-blue text-[48px]">3,847</p>
-              <p className="zahi-body mt-2">Try-ons generated today</p>
-            </div>
-          </div>
         </div>
+      </div>
+
+      {/* Scroll cue */}
+      <div
+        aria-hidden
+        className={`pointer-events-none absolute bottom-8 left-1/2 -translate-x-1/2 transition-opacity duration-1000 delay-[900ms] ${
+          mounted ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        <div className="h-14 w-px animate-pulse bg-gradient-to-b from-[#111315]/40 to-transparent" />
       </div>
     </section>
   );
