@@ -72,11 +72,6 @@ const endpoints = [
 const MAX_LINES = Math.max(...Object.values(samples).map((s) => s.split("\n").length));
 const CODE_MIN = Math.ceil(MAX_LINES * LINE_H + 40);
 
-/*
-  Buttons get their size, padding and font from inline styles on purpose.
-  The global button reset in globals.css is outside any cascade layer, so it
-  beats Tailwind padding, margin and font-size utilities on button elements.
-*/
 const btnBase: CSSProperties = {
   display: "inline-flex",
   alignItems: "center",
@@ -106,7 +101,6 @@ const btnRun: CSSProperties = {
   gap: 6,
 };
 
-/* Tiny syntax highlighter, enough for cURL, Node and JSON */
 const TOKEN_RE =
   /("(?:[^"\\]|\\.)*"(?=\s*:))|("(?:[^"\\]|\\.)*"|`(?:[^`\\]|\\.)*`)|(\b(?:const|await|new|return|curl|POST)\b)|(\s-[XHd]\b)|(\b\d+\b)|(\b[A-Za-z_][A-Za-z0-9_]*(?=:\s))/g;
 
@@ -223,7 +217,6 @@ export default function ApiSection() {
   const copyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { ref, inView } = useInView<HTMLDivElement>();
 
-  // Fake request, runs while the state is "running"
   useEffect(() => {
     if (runState !== "running") return;
     const t = setTimeout(() => setProg(100), 60);
@@ -234,7 +227,6 @@ export default function ApiSection() {
     };
   }, [runState]);
 
-  // On mobile the response card sits below the request card, so bring it into view
   useEffect(() => {
     if (runState !== "running") return;
     if (!window.matchMedia("(max-width: 1023px)").matches) return;
@@ -298,9 +290,20 @@ export default function ApiSection() {
         @media (prefers-reduced-motion: reduce) {
           .zahi-api-line { animation: none; }
         }
+        /* Custom Premium Scrollbar */
+        pre::-webkit-scrollbar {
+          height: 6px;
+          background-color: transparent;
+        }
+        pre::-webkit-scrollbar-thumb {
+          background-color: rgba(255, 255, 255, 0.1);
+          border-radius: 9999px;
+        }
+        pre::-webkit-scrollbar-thumb:hover {
+          background-color: rgba(255, 255, 255, 0.2);
+        }
       `}</style>
 
-      {/* Background, fades at top and bottom so it blends with neighbouring sections */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 -z-10 overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,black_18%,black_82%,transparent)]"
@@ -310,59 +313,62 @@ export default function ApiSection() {
         <div className="absolute bottom-[6%] left-[-8%] h-[420px] w-[420px] rounded-full bg-[radial-gradient(closest-side,rgba(251,146,120,0.14),transparent)] blur-3xl" />
       </div>
 
-      <div ref={ref} className="zahi-content relative py-24 lg:py-32">
-        {/* Header */}
+      <div ref={ref} className="zahi-content relative w-full px-4 py-24 sm:px-6 lg:px-8 lg:py-32">
         <div className="mx-auto max-w-[760px] text-center">
           <h2
-            className={`zahi-heading text-[40px] leading-[1.05] tracking-[-0.035em] sm:text-[52px] lg:text-[68px] ${reveal(
-              "delay-0"
-            )}`}
+            className={`zahi-heading text-[40px] leading-[1.05] tracking-[-0.035em] sm:text-[52px] lg:text-[68px] ${reveal("delay-0")}`}
           >
             <span className="block">Three endpoints.</span>
             <span className="zahi-blue block">Zero magic.</span>
           </h2>
 
           <p
-            className={`zahi-body mx-auto mt-6 max-w-[520px] text-[16px] leading-[1.7] lg:mt-8 lg:text-[18px] ${reveal(
-              "delay-150"
-            )}`}
+            className={`zahi-body mx-auto mt-6 max-w-[520px] text-[16px] leading-[1.7] lg:mt-8 lg:text-[18px] ${reveal("delay-150")}`}
           >
             REST, JSON, API keys. Generate try-ons from your own backend, CMS
             or app. Run the request right here to see the response.
           </p>
         </div>
 
-        {/* Terminals */}
-        <div className="mx-auto mt-14 grid max-w-[1120px] gap-6 lg:mt-16 lg:grid-cols-2 lg:gap-8">
+        <div className="mx-auto mt-14 grid w-full max-w-[1120px] grid-cols-1 gap-6 lg:mt-16 lg:grid-cols-2 lg:gap-8">
           {/* Request */}
-          <div className={reveal("delay-300")}>
+          <div className={`min-w-0 ${reveal("delay-300")}`}>
             <div className={cardCls}>
               <div className="flex h-16 items-center justify-between gap-2 border-b border-white/[0.08] px-4 sm:px-5">
-                <div
-                  role="tablist"
-                  aria-label="Language"
-                  className="inline-flex items-center gap-1 rounded-full bg-white/[0.06] p-1"
-                >
-                  {langs.map((l) => {
-                    const active = lang === l;
-                    return (
-                      <button
-                        key={l}
-                        type="button"
-                        role="tab"
-                        aria-selected={active}
-                        onClick={() => setLang(l)}
-                        style={btnBase}
-                        className={`transition-colors duration-200 ${
-                          active
-                            ? "bg-[#28769D] text-white"
-                            : "bg-transparent text-[#7C8B93] hover:text-white"
-                        }`}
-                      >
-                        {l}
-                      </button>
-                    );
-                  })}
+                <div className="flex items-center gap-4">
+                  {/* Mac OS Window Dots */}
+                  <div className="hidden items-center gap-1.5 sm:flex" aria-hidden>
+                    <div className="h-3 w-3 rounded-full bg-[#ED6A5E]" />
+                    <div className="h-3 w-3 rounded-full bg-[#F4BF4F]" />
+                    <div className="h-3 w-3 rounded-full bg-[#61C554]" />
+                  </div>
+
+                  <div
+                    role="tablist"
+                    aria-label="Language"
+                    className="inline-flex items-center gap-1 rounded-full bg-white/[0.06] p-1"
+                  >
+                    {langs.map((l) => {
+                      const active = lang === l;
+                      return (
+                        <button
+                          key={l}
+                          type="button"
+                          role="tab"
+                          aria-selected={active}
+                          onClick={() => setLang(l)}
+                          style={btnBase}
+                          className={`transition-colors duration-200 ${
+                            active
+                              ? "bg-[#28769D] text-white"
+                              : "bg-transparent text-[#7C8B93] hover:text-white"
+                          }`}
+                        >
+                          {l}
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -422,7 +428,6 @@ export default function ApiSection() {
                 </div>
               </div>
 
-              {/* Same height for every language, so the section never jumps */}
               <div key={lang} className="flex-1" style={{ minHeight: CODE_MIN }}>
                 <CodeBlock text={samples[lang]} />
               </div>
@@ -430,7 +435,7 @@ export default function ApiSection() {
           </div>
 
           {/* Response */}
-          <div ref={responseRef} className={reveal("delay-500")}>
+          <div ref={responseRef} className={`min-w-0 ${reveal("delay-500")}`}>
             <div className={cardCls}>
               <div className="flex h-16 items-center justify-between gap-3 border-b border-white/[0.08] px-4 sm:px-5">
                 <span className="text-[11px] font-semibold tracking-[0.14em] text-[#7C8B93]">
@@ -514,7 +519,7 @@ export default function ApiSection() {
         </p>
 
         {/* Endpoints */}
-        <div className="mx-auto mt-10 grid max-w-[1120px] gap-4 sm:grid-cols-3 sm:gap-6">
+        <div className="mx-auto mt-10 grid w-full max-w-[1120px] grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-6">
           {endpoints.map((e, i) => (
             <div
               key={e.path}
