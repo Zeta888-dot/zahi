@@ -1,68 +1,43 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
-type RevealProps = {
-  children: React.ReactNode;
-  delay?: number;
-  className?: string;
-};
-
+/* Fades and lifts its children in once, the first time they scroll into view */
 export default function Reveal({
   children,
   delay = 0,
   className = "",
-}: RevealProps) {
+}: {
+  children: ReactNode;
+  delay?: number;
+  className?: string;
+}) {
   const ref = useRef<HTMLDivElement>(null);
-  const [shown, setShown] = useState(false);
+  const [inView, setInView] = useState(false);
 
   useEffect(() => {
-    const element = ref.current;
-
-    if (!element) {
-      return;
-    }
-
-    const reducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-
-    if (reducedMotion) {
-      setShown(true);
-      return;
-    }
-
+    const el = ref.current;
+    if (!el) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (!entry.isIntersecting) {
-          return;
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.disconnect();
         }
-
-        setShown(true);
-        observer.disconnect();
       },
-      {
-        threshold: 0.12,
-        rootMargin: "0px 0px -40px 0px",
-      }
+      { threshold: 0.12 }
     );
-
-    observer.observe(element);
-
+    observer.observe(el);
     return () => observer.disconnect();
   }, []);
 
   return (
     <div
       ref={ref}
-      className={`transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-        shown
-          ? "translate-y-0 opacity-100"
-          : "translate-y-8 opacity-0"
+      style={{ transitionDelay: `${delay}ms` }}
+      className={`transition-all duration-1000 ease-out motion-reduce:transition-none ${
+        inView ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
       } ${className}`}
-      style={{
-        transitionDelay: `${shown ? delay : 0}ms`,
-      }}
     >
       {children}
     </div>
