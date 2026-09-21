@@ -17,13 +17,13 @@ export default function Home() {
 
         <TrustedBy />
 
+        <HowItWorks />
+
         <PluginsSection />
 
         <WidgetSection />
 
         <ApiSection />
-
-        <HowItWorks />
 
         <PricingSection />
 

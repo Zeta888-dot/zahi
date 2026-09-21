@@ -131,38 +131,49 @@ body {
   color: var(--zahi-text-faint);
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
+/*
+  Element resets live inside the base layer, so Tailwind utilities
+  (text-white, hidden, padding and so on) can override them.
+  Outside a layer, "a { color: inherit }" beat every text-* utility.
+*/
 @layer base {
-button,
-input,
-textarea,
-select {
-  font: inherit;
-}
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 
-button {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  cursor: pointer;
-}
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+  }
 
-button:disabled {
-  cursor: not-allowed;
-}
-}
+  button {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    cursor: pointer;
+  }
 
-img {
-  display: block;
-  max-width: 100%;
-}
+  button:disabled {
+    cursor: not-allowed;
+  }
 
-svg {
-  display: block;
+  img {
+    display: block;
+    max-width: 100%;
+  }
+
+  svg {
+    display: block;
+  }
+
+  /* Keyboard focus ring for every interactive element */
+  :focus-visible {
+    outline: 2px solid var(--zahi-blue-dark);
+    outline-offset: 3px;
+  }
 }
 
 /* =========================================================
@@ -353,7 +364,7 @@ svg {
 }
 
 /* =========================================================
-   BUTTONS
+   BUTTONS (legacy, used by navbar and footer)
    ========================================================= */
 
 .zahi-button-primary,
@@ -438,6 +449,195 @@ svg {
 
 .zahi-button-ghost:hover {
   color: var(--zahi-blue-dark);
+}
+
+.zahi-button-primary:active,
+.zahi-button-secondary:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* =========================================================
+   BUTTONS (pill with icon circle)
+
+   Usage:
+   <a class="zahi-btn zahi-btn-primary zahi-btn-lg">
+     Label
+     <span class="zahi-btn-icon"><svg>...</svg></span>
+   </a>
+
+   Variants: zahi-btn-primary, zahi-btn-secondary
+   Sizes:    zahi-btn-sm, (default), zahi-btn-lg
+   Extras:   zahi-btn-block (full width, label left, icon right)
+   ========================================================= */
+
+.zahi-btn {
+  --btn-bg: #111315;
+  --btn-fg: #ffffff;
+  --btn-border: transparent;
+  --btn-shadow: 0 14px 30px -14px rgba(17, 19, 21, 0.55);
+
+  --btn-hover-bg: #28769d;
+  --btn-hover-fg: #ffffff;
+  --btn-hover-border: transparent;
+  --btn-hover-shadow: 0 22px 44px -16px rgba(40, 118, 157, 0.65);
+
+  --btn-icon-bg: #ffffff;
+  --btn-icon-fg: #111315;
+  --btn-icon-hover-bg: #ffffff;
+  --btn-icon-hover-fg: #28769d;
+
+  --btn-height: 48px;
+  --btn-font: 14px;
+  --btn-pad: 22px;
+  --btn-icon: 34px;
+  --btn-gap: 12px;
+
+  position: relative;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: var(--btn-gap);
+
+  height: var(--btn-height);
+
+  padding: 0 var(--btn-pad);
+
+  border: 1px solid var(--btn-border);
+  border-radius: 9999px;
+
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+
+  box-shadow: var(--btn-shadow);
+
+  font-family: inherit;
+  font-size: var(--btn-font);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  text-decoration: none;
+
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+
+  transition:
+    background-color 250ms ease,
+    color 250ms ease,
+    border-color 250ms ease,
+    box-shadow 300ms ease,
+    transform 300ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.zahi-btn-sm {
+  --btn-height: 40px;
+  --btn-font: 13px;
+  --btn-pad: 18px;
+  --btn-icon: 28px;
+  --btn-gap: 10px;
+}
+
+.zahi-btn-lg {
+  --btn-height: 60px;
+  --btn-font: 16px;
+  --btn-pad: 30px;
+  --btn-icon: 44px;
+  --btn-gap: 18px;
+}
+
+.zahi-btn-block {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+/* The circle sits close to the pill edge, evenly inset on top, bottom and right */
+.zahi-btn-icon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+
+  width: var(--btn-icon);
+  height: var(--btn-icon);
+
+  margin-right: calc(
+    ((var(--btn-height) - var(--btn-icon)) / 2) - 1px - var(--btn-pad)
+  );
+
+  border-radius: 9999px;
+
+  background: var(--btn-icon-bg);
+  color: var(--btn-icon-fg);
+
+  transition:
+    background-color 250ms ease,
+    color 250ms ease,
+    transform 300ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.zahi-btn-icon svg {
+  width: 46%;
+  height: 46%;
+
+  transition: transform 300ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Variants */
+
+.zahi-btn-secondary {
+  --btn-bg: rgba(255, 255, 255, 0.72);
+  --btn-fg: #111315;
+  --btn-border: #c4dbe5;
+  --btn-shadow: 0 10px 30px -18px rgba(54, 103, 126, 0.35);
+
+  --btn-hover-bg: #ffffff;
+  --btn-hover-fg: #111315;
+  --btn-hover-border: #28769d;
+  --btn-hover-shadow: 0 20px 40px -18px rgba(40, 118, 157, 0.45);
+
+  --btn-icon-bg: #111315;
+  --btn-icon-fg: #ffffff;
+  --btn-icon-hover-bg: #28769d;
+  --btn-icon-hover-fg: #ffffff;
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* States */
+
+@media (hover: hover) and (pointer: fine) {
+  .zahi-btn:hover {
+    background: var(--btn-hover-bg);
+    color: var(--btn-hover-fg);
+    border-color: var(--btn-hover-border);
+    box-shadow: var(--btn-hover-shadow);
+    transform: translateY(-2px);
+  }
+
+  .zahi-btn:hover .zahi-btn-icon {
+    background: var(--btn-icon-hover-bg);
+    color: var(--btn-icon-hover-fg);
+  }
+
+  .zahi-btn:hover .zahi-btn-icon svg {
+    transform: rotate(45deg);
+  }
+}
+
+.zahi-btn:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: var(--btn-shadow);
+  transition-duration: 120ms;
+}
+
+.zahi-btn:disabled,
+.zahi-btn[aria-disabled="true"] {
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 /* =========================================================
@@ -804,6 +1004,14 @@ svg {
     padding-inline: 16px;
   }
 
+  .zahi-btn-lg {
+    --btn-height: 56px;
+    --btn-font: 15px;
+    --btn-pad: 24px;
+    --btn-icon: 40px;
+    --btn-gap: 14px;
+  }
+
   .zahi-eyebrow {
     font-size: 8px;
   }
@@ -879,4 +1087,21 @@ svg {
 
 .zahi-float-slow {
   animation: zahi-float 10s ease-in-out infinite;
+}
+/* Light pill for dark backgrounds, use with: zahi-btn zahi-btn-light */
+.zahi-btn-light {
+  --btn-bg: #eaf4f9;
+  --btn-fg: #0b1216;
+  --btn-border: transparent;
+  --btn-shadow: 0 16px 40px -18px rgba(111, 182, 221, 0.55);
+
+  --btn-hover-bg: #6fb6dd;
+  --btn-hover-fg: #0b1216;
+  --btn-hover-border: transparent;
+  --btn-hover-shadow: 0 24px 50px -16px rgba(111, 182, 221, 0.75);
+
+  --btn-icon-bg: #0b1216;
+  --btn-icon-fg: #ffffff;
+  --btn-icon-hover-bg: #0b1216;
+  --btn-icon-hover-fg: #6fb6dd;
 }

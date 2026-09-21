@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
+import Link from "next/link";
 import MenuOverlay from "./MenuOverlay";
 
 type NavItem = {
@@ -64,6 +65,9 @@ const dropdownItems: Record<string, { label: string; href: string }[]> = {
   ],
 };
 
+/* Navbar buttons use slightly smaller type, so they sit well next to the nav links */
+const navBtnVars = { "--btn-font": "12px" } as CSSProperties;
+
 function ChevronIcon({ open }: { open: boolean }) {
   return (
     <svg
@@ -100,6 +104,20 @@ function ArrowIcon() {
         d="M2.5 7H11.5M8 3.5L11.5 7L8 10.5"
         stroke="currentColor"
         strokeWidth="1.25"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function ArrowUpRight() {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <path
+        d="M4 12L12 4M5.5 4H12V10.5"
+        stroke="currentColor"
+        strokeWidth="1.8"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
@@ -161,13 +179,13 @@ export default function Navbar() {
       <header className="fixed inset-x-0 top-0 z-[70] px-4 pt-4 sm:px-6 sm:pt-5">
         <div className="relative mx-auto flex h-[58px] w-full max-w-[1500px] items-center justify-between rounded-full border border-[#D5E6ED] bg-white/90 px-2.5 pl-5 shadow-[0_12px_40px_rgba(54,103,126,0.10)] backdrop-blur-xl sm:px-3 sm:pl-6">
           {/* Logo */}
-          <a
+          <Link
             href="/"
             onClick={closeNavigation}
             className="relative z-[80] text-[21px] font-medium leading-none tracking-[-0.055em] text-[#111315]"
           >
             zahi<span className="text-[#28769D]">.</span>
-          </a>
+          </Link>
 
           {/* Desktop navigation */}
           <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-7 lg:flex">
@@ -185,7 +203,7 @@ export default function Navbar() {
                   className="relative"
                   data-navbar-dropdown
                 >
-                  <a
+                  <Link
                     href={link.href}
                     onClick={(event) => {
                       if (hasDropdown) {
@@ -215,14 +233,14 @@ export default function Navbar() {
                     {link.label === "Home" && (
                       <span className="absolute bottom-[7px] left-0 h-[2px] w-full rounded-full bg-[#5C9FC2]" />
                     )}
-                  </a>
+                  </Link>
 
                   {/* Dropdown */}
                   {hasDropdown &&
                     activeDropdown === link.label && (
                       <div className="absolute left-1/2 top-[55px] w-[210px] -translate-x-1/2 overflow-hidden rounded-[18px] border border-[#D5E6ED] bg-white p-2 shadow-[0_20px_55px_rgba(54,103,126,0.13)]">
                         {dropdownItems[link.label].map((item) => (
-                          <a
+                          <Link
                             key={item.href}
                             href={item.href}
                             onClick={closeNavigation}
@@ -233,7 +251,7 @@ export default function Navbar() {
                             <span className="opacity-0 transition-opacity duration-200 group-hover:opacity-100">
                               <ArrowIcon />
                             </span>
-                          </a>
+                          </Link>
                         ))}
                       </div>
                     )}
@@ -244,42 +262,28 @@ export default function Navbar() {
 
           {/* Desktop actions */}
           <div className="relative z-[80] ml-auto flex items-center gap-2">
-            <a
-              href="/login"
-              onClick={closeNavigation}
-              className="hidden h-10 items-center rounded-full border border-[#D5E6ED] px-5 text-[10px] font-medium text-[#5F6D73] transition-colors duration-200 hover:border-[#B8D3DF] hover:bg-[#F8FCFE] hover:text-[#111315] sm:flex"
-            >
-              Sign in
-            </a>
+            <div className="hidden sm:block">
+              <Link
+                href="/login"
+                onClick={closeNavigation}
+                className="zahi-btn zahi-btn-secondary zahi-btn-sm"
+                style={navBtnVars}
+              >
+                Sign in
+              </Link>
+            </div>
 
-            <a
+            <Link
               href="/try-on"
               onClick={closeNavigation}
-              className="flex h-10 items-center gap-2 rounded-full px-5 text-[10px] font-semibold transition-transform duration-200 hover:scale-[0.98]"
-              style={{
-                color: "#ffffff",
-                backgroundColor: "#111315",
-              }}
+              className="zahi-btn zahi-btn-primary zahi-btn-sm"
+              style={navBtnVars}
             >
-              <span
-                style={{
-                  color: "#ffffff",
-                  display: "inline-block",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                Get started
+              Get started
+              <span className="zahi-btn-icon" aria-hidden="true">
+                <ArrowUpRight />
               </span>
-
-              <span
-                style={{
-                  color: "#ffffff",
-                  display: "inline-flex",
-                }}
-              >
-                <ArrowIcon />
-              </span>
-            </a>
+            </Link>
           </div>
 
           {/* Mobile menu button */}

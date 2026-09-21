@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 
 const faqs = [
   {
@@ -17,7 +18,7 @@ const faqs = [
   },
   {
     q: "How long does a generation take?",
-    a: "Median 0.8 seconds on our edge fleet. Batch catalog jobs run asynchronously and notify your webhook on completion.",
+    a: "Median 8 seconds on our edge fleet. Batch catalog jobs run asynchronously and notify your webhook on completion.",
   },
   {
     q: "Can I use my own models?",
@@ -25,103 +26,181 @@ const faqs = [
   },
   {
     q: "What does it cost?",
-    a: "Fifty try-ons free every month. After that you pay per result, from $0.10 per try-on. No seats, no contracts.",
+    a: "There is no free tier. Flex is pay-as-you-go at $0.18 per generation with no base fee. Studio ($49 a month) and Scale ($199 a month) include generations and lower the rate to $0.10 and $0.06. No seats, no contracts.",
   },
 ];
 
+function useInView<T extends HTMLElement>() {
+  const ref = useRef<T>(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.12 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return { ref, inView };
+}
+
+function ArrowUpRight() {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <path
+        d="M4 12L12 4M5.5 4H12V10.5"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 export default function FaqSection() {
-  const [open, setOpen] = useState(0);
+  const [open, setOpen] = useState<number | null>(0);
+  const { ref, inView } = useInView<HTMLDivElement>();
+
+  const reveal = (delay: string) =>
+    `transition-all duration-1000 ease-out motion-reduce:transition-none ${delay} ${
+      inView ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+    }`;
 
   return (
-    <section className="zahi-section" id="faq">
-      <div className="zahi-content zahi-section-inner">
-        <div className="grid gap-16 lg:grid-cols-[1fr_1.4fr] lg:items-start">
-          {/* Left */}
-          <div>
-            <p className="zahi-eyebrow">FAQ</p>
-            <h2 className="zahi-heading mt-6 text-[40px] lg:text-[56px]">
-              Questions,
-              <br />
-              <span className="zahi-blue">answered.</span>
-            </h2>
+    <section id="faq" className="zahi-section relative isolate scroll-mt-20 overflow-hidden">
+      {/* Background, fades at top and bottom so it blends with neighbouring sections */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10 overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,black_18%,black_82%,transparent)]"
+      >
+        <div className="absolute top-[8%] right-[-10%] h-[460px] w-[460px] rounded-full bg-[radial-gradient(closest-side,rgba(139,92,246,0.14),transparent)] blur-3xl" />
+        <div className="absolute top-[22%] left-1/2 h-[520px] w-[820px] max-w-[140vw] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(40,118,157,0.16),transparent)] blur-3xl" />
+        <div className="absolute bottom-[6%] left-[-8%] h-[420px] w-[420px] rounded-full bg-[radial-gradient(closest-side,rgba(251,146,120,0.14),transparent)] blur-3xl" />
+      </div>
 
-            <div className="zahi-panel-raised mt-10 p-6">
-              <p style={{ fontSize: 13, fontWeight: 600, color: "#111315" }}>
-                Still unsure?
-              </p>
-              <p className="zahi-small mt-2" style={{ lineHeight: 1.6 }}>
-                Talk to a human. We reply within one business day, PKT.
-              </p>
-              <a
-                href="/contact"
-                className="zahi-button-secondary mt-5"
-                style={{ display: "inline-flex" }}
-              >
-                Contact us
-              </a>
-            </div>
-          </div>
+      <div ref={ref} className="zahi-content relative py-24 lg:py-32">
+        {/* Header */}
+        <div className="mx-auto max-w-[760px] text-center">
+          <h2
+            className={`zahi-heading text-[40px] leading-[1.05] tracking-[-0.035em] sm:text-[52px] lg:text-[68px] ${reveal(
+              "delay-0"
+            )}`}
+          >
+            <span className="block">Questions,</span>
+            <span className="zahi-blue block">answered.</span>
+          </h2>
 
-          {/* Right: accordion */}
-          <div>
-            {faqs.map((f, i) => (
-              <div
-                key={f.q}
-                style={{
-                  borderTop: i === 0 ? "1px solid #E2EEF3" : "none",
-                  borderBottom: "1px solid #E2EEF3",
-                }}
-              >
-                <button
-                  onClick={() => setOpen(open === i ? -1 : i)}
-                  className="flex w-full items-center justify-between gap-6 py-6 text-left"
-                >
-                  <span
-                    style={{
-                      fontSize: 15,
-                      fontWeight: 600,
-                      color: open === i ? "#111315" : "#46535A",
-                      transition: "color 300ms ease",
-                    }}
-                  >
-                    {f.q}
-                  </span>
-                  <span
-                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full"
-                    style={{
-                      border: "1px solid #D5E6ED",
-                      background: open === i ? "#111315" : "#ffffff",
-                      color: open === i ? "#ffffff" : "#718087",
-                      transition: "all 300ms ease",
-                      transform: open === i ? "rotate(45deg)" : "rotate(0deg)",
-                    }}
-                  >
-                    <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
-                      <path d="M6 1v10M1 6h10" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
-                    </svg>
-                  </span>
-                </button>
+          <p
+            className={`zahi-body mx-auto mt-6 max-w-[520px] text-[16px] leading-[1.7] lg:mt-8 lg:text-[18px] ${reveal(
+              "delay-150"
+            )}`}
+          >
+            Quick answers about quality, platforms, speed and pricing.
+          </p>
+        </div>
 
+        {/* Accordion */}
+        <div className={`mx-auto mt-14 max-w-[820px] lg:mt-16 ${reveal("delay-300")}`}>
+          <div className="overflow-hidden rounded-[28px] bg-white ring-1 ring-black/[0.06] shadow-[0_40px_100px_-40px_rgba(17,19,21,0.25)]">
+            {faqs.map((f, i) => {
+              const isOpen = open === i;
+
+              return (
                 <div
-                  className="grid transition-all duration-500 ease-out"
-                  style={{ gridTemplateRows: open === i ? "1fr" : "0fr" }}
+                  key={f.q}
+                  className={`transition-colors duration-500 ${
+                    i > 0 ? "border-t border-[#E2EEF3]" : ""
+                  } ${isOpen ? "bg-[#F8FCFE]" : "bg-white"}`}
                 >
-                  <div className="overflow-hidden">
-                    <p
-                      className="pb-6"
-                      style={{
-                        fontSize: 13,
-                        lineHeight: 1.7,
-                        color: "#718087",
-                        maxWidth: 560,
-                      }}
+                  <h3>
+                    <button
+                      type="button"
+                      id={`faq-button-${i}`}
+                      aria-expanded={isOpen}
+                      aria-controls={`faq-panel-${i}`}
+                      onClick={() => setOpen(isOpen ? null : i)}
+                      className="group flex w-full items-center justify-between gap-6 px-6 py-6 text-left focus-visible:-outline-offset-4 lg:px-8 lg:py-7"
                     >
-                      {f.a}
-                    </p>
+                      <span
+                        className={`text-[17px] font-semibold leading-[1.4] transition-colors duration-300 lg:text-[19px] ${
+                          isOpen
+                            ? "text-[#111315]"
+                            : "text-[#46535A] group-hover:text-[#111315]"
+                        }`}
+                      >
+                        {f.q}
+                      </span>
+
+                      <span
+                        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ring-1 transition-all duration-300 ${
+                          isOpen
+                            ? "rotate-45 bg-[#111315] text-white ring-[#111315]"
+                            : "bg-white text-[#718087] ring-[#D5E6ED] group-hover:text-[#111315] group-hover:ring-[#111315]"
+                        }`}
+                      >
+                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                          <path
+                            d="M6 1v10M1 6h10"
+                            stroke="currentColor"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                          />
+                        </svg>
+                      </span>
+                    </button>
+                  </h3>
+
+                  <div
+                    id={`faq-panel-${i}`}
+                    role="region"
+                    aria-labelledby={`faq-button-${i}`}
+                    aria-hidden={!isOpen}
+                    className={`grid transition-[grid-template-rows] duration-500 ease-out motion-reduce:transition-none ${
+                      isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                    }`}
+                  >
+                    <div className="overflow-hidden">
+                      <p
+                        className={`max-w-[640px] px-6 pb-7 text-[15px] leading-[1.7] text-[#718087] transition-opacity duration-500 motion-reduce:transition-none lg:px-8 lg:pb-8 lg:text-[16px] ${
+                          isOpen ? "opacity-100" : "opacity-0"
+                        }`}
+                      >
+                        {f.a}
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Contact */}
+        <div className={`mx-auto mt-6 max-w-[820px] lg:mt-8 ${reveal("delay-500")}`}>
+          <div className="flex flex-col items-start gap-5 rounded-[28px] bg-white p-7 ring-1 ring-black/[0.06] shadow-[0_40px_100px_-40px_rgba(17,19,21,0.25)] sm:flex-row sm:items-center sm:justify-between lg:p-8">
+            <div>
+              <p className="text-[18px] font-semibold text-[#111315]">Still unsure?</p>
+              <p className="mt-1.5 text-[15px] leading-[1.6] text-[#718087]">
+                Talk to a human. We reply within one business day, PKT.
+              </p>
+            </div>
+
+            <Link href="/contact" className="zahi-btn zahi-btn-secondary shrink-0">
+              Contact us
+              <span className="zahi-btn-icon" aria-hidden="true">
+                <ArrowUpRight />
+              </span>
+            </Link>
           </div>
         </div>
       </div>
